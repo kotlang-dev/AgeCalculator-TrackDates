@@ -52,7 +52,7 @@ class DashboardViewModel(
         viewModelScope.launch {
             uiState.value.selectedOccasion?.let {
                 val updatedOccasion = it.copy(dateMillis = dateMillis)
-                repository.upsertOccasion(updatedOccasion)
+                repository.insertOccasion(updatedOccasion)
             }
         }
     }

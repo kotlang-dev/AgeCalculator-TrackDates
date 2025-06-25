@@ -1,21 +1,22 @@
 package com.synac.agecalculator.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OccasionDao {
 
-    @Upsert
-    suspend fun upsertOccasion(occasion: OccasionEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOccasion(occasion: OccasionEntity): Long
 
     @Query("DELETE FROM occasions WHERE id = :occasionId")
     suspend fun deleteOccasion(occasionId: Int)
 
     @Query("SELECT * FROM occasions ORDER BY dateMillis DESC")
-    fun getAllOccasions(): Flow<List<OccasionEntity>>
+    fun getAllOccasions(): Flow<List<OccasionEntity>> //TODO change the name to observeOccasions
 
     @Query("SELECT * FROM occasions WHERE id = :occasionId")
     suspend fun getOccasionById(occasionId: Int): OccasionEntity?

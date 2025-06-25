@@ -36,12 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import com.synac.agecalculator.R
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.EmojiPickerDialog
+import com.synac.agecalculator.presentation.component.ReminderIcon
 import com.synac.agecalculator.presentation.component.StatisticsCard
 import com.synac.agecalculator.presentation.component.StylizedAgeText
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
@@ -100,7 +99,6 @@ fun CalculatorScreen(
             isDeleteIconVisible = state.occasionId != null,
             isReminderEnabled = state.isReminderEnabled,
             onBackClick = navigateUp,
-            onSaveClick = { onAction(CalculatorAction.SaveOccasion) },
             onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) },
             onReminderClick = { onAction(CalculatorAction.ToggleReminder) }
         )
@@ -134,7 +132,6 @@ private fun CalculatorTopBar(
     isReminderEnabled: Boolean,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    onSaveClick: () -> Unit,
     onReminderClick: () -> Unit
 ) {
     TopAppBar(
@@ -150,14 +147,9 @@ private fun CalculatorTopBar(
         },
         title = { Text(text = "Age Calculator") },
         actions = {
-            val bellIcon = if (isReminderEnabled) {
-                R.drawable.ic_notifications_active
-            } else R.drawable.ic_notifications_off
-
             IconButton(onClick = onReminderClick) {
-                Icon(
-                    painter = painterResource(bellIcon),
-                    contentDescription = "Set Notification"
+                ReminderIcon(
+                    isReminderEnabled = isReminderEnabled
                 )
             }
             if (isDeleteIconVisible) {
@@ -167,12 +159,6 @@ private fun CalculatorTopBar(
                         contentDescription = "Delete"
                     )
                 }
-            }
-            IconButton(onClick = onSaveClick) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_save),
-                    contentDescription = "Save"
-                )
             }
         }
     )
