@@ -4,5 +4,6 @@ data class Occasion(
     val id: Int?,
     val title: String,
     val dateMillis: Long?,
-    val emoji: String
+    val emoji: String,
+    val isReminderEnabled: Boolean
 )

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.domain.repository.OccasionRepository
+import com.synac.agecalculator.domain.repository.ReminderScheduler
 import com.synac.agecalculator.presentation.navigation.Route
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import kotlinx.datetime.until
 
 class CalculatorViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: OccasionRepository
+    private val repository: OccasionRepository,
+    private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     val occasionId = savedStateHandle.toRoute<Route.CalculatorScreen>().id
@@ -89,6 +91,11 @@ class CalculatorViewModel(
             CalculatorAction.DeleteOccasion -> {
                 deleteOccasion()
             }
+
+            CalculatorAction.ToggleReminder -> {
+                _uiState.update { it.copy(isReminderEnabled = !it.isReminderEnabled) }
+                toggleReminder()
+            }
         }
     }
 
@@ -98,7 +105,8 @@ class CalculatorViewModel(
                 id = occasionId,
                 dateMillis = uiState.value.fromDateMillis,
                 emoji = uiState.value.emoji,
-                title = uiState.value.title
+                title = uiState.value.title,
+                isReminderEnabled = uiState.value.isReminderEnabled
             )
             repository.upsertOccasion(occasion)
             _event.send(CalculatorEvent.ShowToast("Saved Successfully"))
@@ -115,7 +123,8 @@ class CalculatorViewModel(
                         fromDateMillis = occasion.dateMillis,
                         emoji = occasion.emoji,
                         title = occasion.title,
-                        occasionId = occasion.id
+                        occasionId = occasion.id,
+                        isReminderEnabled = occasion.isReminderEnabled
                     )
                 }
             }
@@ -129,6 +138,23 @@ class CalculatorViewModel(
             repository.deleteOccasion(occasionId)
             _event.send(CalculatorEvent.ShowToast("Deleted Successfully"))
             _event.send(CalculatorEvent.NavigateToDashboardScreen)
+        }
+    }
+
+    fun toggleReminder() {
+        val occasion = Occasion(
+            id = occasionId,
+            dateMillis = uiState.value.fromDateMillis,
+            emoji = uiState.value.emoji,
+            title = uiState.value.title,
+            isReminderEnabled = uiState.value.isReminderEnabled
+        )
+        if (occasion.isReminderEnabled) {
+            reminderScheduler.schedule(occasion)
+            _event.trySend(CalculatorEvent.ShowToast("Reminder Enabled"))
+        } else {
+            occasion.id?.let { reminderScheduler.cancel(it) }
+            _event.trySend(CalculatorEvent.ShowToast("Reminder Disabled"))
         }
     }
 

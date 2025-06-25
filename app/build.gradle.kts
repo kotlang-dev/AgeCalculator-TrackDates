@@ -12,7 +12,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.synac.agecalculator"
+        applicationId = "com.synac.agecalculator2"
         minSdk = 21
         targetSdk = 35
         versionCode = 4
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.navigation)

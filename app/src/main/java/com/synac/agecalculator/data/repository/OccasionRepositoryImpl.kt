@@ -29,7 +29,8 @@ class OccasionRepositoryImpl(
                     id = null,
                     title = "Birthday",
                     dateMillis = 0L,
-                    emoji = "🎂"
+                    emoji = "🎂",
+                    isReminderEnabled = false
                 )
                 dao.upsertOccasion(default.toEntity())
                 listOf(default)

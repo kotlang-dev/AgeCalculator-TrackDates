@@ -173,7 +173,7 @@ private fun OccasionCard(
 @Composable
 private fun PreviewDashboardScreen() {
     val dummyOccasions = List(20) {
-        Occasion(id = 1, title = "Birthday", dateMillis = 0L, emoji = "🎂")
+        Occasion(id = 1, title = "Birthday", dateMillis = 0L, emoji = "🎂", isReminderEnabled = false)
     }
     DashboardScreen(
         state = DashboardUiState(occasions = dummyOccasions),

@@ -11,11 +11,12 @@ composeBom = "2025.06.00"
 datetime = "0.6.1"
 navigationCompose = "2.9.0"
 kotlinxSerializationJson = "1.7.3"
-room = "2.7.1"
+room = "2.7.2"
 ksp = "2.1.20-2.0.1"
 koin = "4.0.1"
 uiTextGoogleFonts = "1.8.2"
 coreSplashscreen = "1.0.1"
+workRuntimeKtx = "2.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,7 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

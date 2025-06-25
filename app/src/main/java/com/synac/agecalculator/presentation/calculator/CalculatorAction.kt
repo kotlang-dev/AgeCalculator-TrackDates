@@ -10,4 +10,5 @@ sealed interface CalculatorAction {
     data class SetTitle(val title: String) : CalculatorAction
     data object SaveOccasion : CalculatorAction
     data object DeleteOccasion : CalculatorAction
+    data object ToggleReminder : CalculatorAction
 }
