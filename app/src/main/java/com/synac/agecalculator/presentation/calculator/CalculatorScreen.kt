@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.synac.agecalculator.presentation.component.AgeBoxSection
@@ -171,6 +173,7 @@ private fun HeaderSection(
     state: CalculatorUiState,
     onAction: (CalculatorAction) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -208,6 +211,9 @@ private fun HeaderSection(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus() }
                 )
             )
         }
@@ -238,17 +244,17 @@ private fun StatisticsSection(
         AgeBoxSection(
             title = "Time Passed",
             values = listOf(
-                "YEARS" to state.period.years.toString(),
-                "MONTHS" to state.period.months.toString(),
-                "DAYS" to state.period.days.toString()
+                "YEARS" to state.passedPeriod.years,
+                "MONTHS" to state.passedPeriod.months,
+                "DAYS" to state.passedPeriod.days
             )
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         AgeBoxSection(
             title = "Upcoming",
             values = listOf(
-                "MONTHS" to "12",
-                "DAYS" to "04"
+                "MONTHS" to state.upcomingPeriod.months,
+                "DAYS" to state.upcomingPeriod.days
             )
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))

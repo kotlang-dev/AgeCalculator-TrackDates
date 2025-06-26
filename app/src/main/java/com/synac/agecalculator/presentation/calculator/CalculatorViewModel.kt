@@ -19,8 +19,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
 class CalculatorViewModel(
@@ -185,9 +189,23 @@ class CalculatorViewModel(
         val diffInMinutes = fromInstant.until(toInstant, DateTimeUnit.MINUTE, timeZone)
         val diffInSeconds = fromInstant.until(toInstant, DateTimeUnit.SECOND, timeZone)
 
+        //Calculate next Anniversary
+        val fromDate = fromInstant.toLocalDateTime(timeZone).date
+        val toDate = toInstant.toLocalDateTime(timeZone).date
+
+        var nextAnniversary = LocalDate(toDate.year, fromDate.month, fromDate.dayOfMonth)
+        if (nextAnniversary < toDate) {
+            nextAnniversary = LocalDate(toDate.year + 1, fromDate.month, fromDate.dayOfMonth)
+        }
+
+        val nextAnniversaryInstant = nextAnniversary.atStartOfDayIn(timeZone)
+        val upcomingPeriod = toInstant.periodUntil(nextAnniversaryInstant, timeZone)
+
+
         _uiState.update {
             it.copy(
-                period = period,
+                passedPeriod = period,
+                upcomingPeriod = upcomingPeriod,
                 ageStats = AgeStats(
                     years = period.years,
                     months = diffInMonths.toInt(),

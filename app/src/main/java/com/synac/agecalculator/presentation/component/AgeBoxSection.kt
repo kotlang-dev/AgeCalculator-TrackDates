@@ -23,7 +23,7 @@ import com.synac.agecalculator.presentation.theme.spacing
 @Composable
 fun AgeBoxSection(
     title: String,
-    values: List<Pair<String, String>>,
+    values: List<Pair<String, Int>>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -47,7 +47,7 @@ fun AgeBoxSection(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = value,
+                            text = value.toString(),
                             style = MaterialTheme.typography.headlineLarge.copy(
                                 color = MaterialTheme.colorScheme.greenTextColor,
                                 fontWeight = FontWeight.Bold
@@ -75,17 +75,17 @@ private fun PreviewAgeBoxSection() {
         AgeBoxSection(
             title = "Time Passed",
             values = listOf(
-                "YEARS" to "25",
-                "MONTHS" to "00",
-                "DAYS" to "00"
+                "YEARS" to 25,
+                "MONTHS" to 1,
+                "DAYS" to 16
             )
         )
         Spacer(modifier = Modifier.height(24.dp))
         AgeBoxSection(
             title = "Upcoming",
             values = listOf(
-                "MONTHS" to "12",
-                "DAYS" to "04"
+                "MONTHS" to 8,
+                "DAYS" to 12
             )
         )
     }
