@@ -1,5 +1,6 @@
 package com.synac.agecalculator.presentation.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF415F91)
@@ -74,5 +75,14 @@ val surfaceContainerDark = Color(0xFF1D2024)
 val surfaceContainerHighDark = Color(0xFF282A2F)
 val surfaceContainerHighestDark = Color(0xFF33353A)
 
-val CustomBlue = Color(0xFF00DBDE)
-val CustomPink = Color(0xFFFC00FF)
+val lightGreen = Color(0xFF00FF66)
+val darkGreen = Color(0xFF00994D)
+
+val gradient = Brush.horizontalGradient(
+    colors = listOf(
+        Color(0xFF4285F4),
+        Color(0xFF9B59B6),
+        Color(0xFFE91E63),
+        Color(0xFFF44336)
+    )
+)

@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [OccasionEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class OccasionDatabase : RoomDatabase() {
     abstract fun occasionDao(): OccasionDao

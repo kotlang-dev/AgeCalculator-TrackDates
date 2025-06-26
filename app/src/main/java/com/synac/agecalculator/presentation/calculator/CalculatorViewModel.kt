@@ -7,7 +7,9 @@ import androidx.navigation.toRoute
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.presentation.navigation.Route
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +18,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
 class CalculatorViewModel(
@@ -25,13 +30,15 @@ class CalculatorViewModel(
     private val repository: OccasionRepository
 ) : ViewModel() {
 
-    val occasionId = savedStateHandle.toRoute<Route.CalculatorScreen>().id
+    val occasionIdNavArg = savedStateHandle.toRoute<Route.CalculatorScreen>().id
 
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
 
     private val _event = Channel<CalculatorEvent>()
     val event = _event.receiveAsFlow()
+
+    private var saveJob: Job? = null
 
     init {
         getOccasion()
@@ -48,12 +55,8 @@ class CalculatorViewModel(
             }
 
             is CalculatorAction.EmojiSelected -> {
-                _uiState.update {
-                    it.copy(
-                        isEmojiDialogOpen = false,
-                        emoji = action.emoji
-                    )
-                }
+                _uiState.update { it.copy(isEmojiDialogOpen = false, emoji = action.emoji) }
+                saveOccasion()
             }
 
             is CalculatorAction.ShowDatePicker -> {
@@ -70,19 +73,25 @@ class CalculatorViewModel(
             }
 
             is CalculatorAction.DateSelected -> {
-                _uiState.update { it.copy(isDatePickerDialogOpen = false) }
                 when (uiState.value.activeDateField) {
-                    DateField.FROM -> _uiState.update { it.copy(fromDateMillis = action.millis) }
-                    DateField.TO -> _uiState.update { it.copy(toDateMillis = action.millis) }
+                    DateField.FROM -> {
+                        _uiState.update {
+                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
+                        }
+                        saveOccasion()
+                    }
+
+                    DateField.TO -> {
+                        _uiState.update {
+                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
+                        }
+                    }
                 }
                 calculateStats()
             }
 
             is CalculatorAction.SetTitle -> {
                 _uiState.update { it.copy(title = action.title) }
-            }
-
-            CalculatorAction.SaveOccasion -> {
                 saveOccasion()
             }
 
@@ -93,23 +102,25 @@ class CalculatorViewModel(
     }
 
     private fun saveOccasion() {
+        saveJob?.cancel()
         viewModelScope.launch {
+            delay(1000)
             val occasion = Occasion(
-                id = occasionId,
+                id = uiState.value.occasionId,
                 dateMillis = uiState.value.fromDateMillis,
                 emoji = uiState.value.emoji,
                 title = uiState.value.title
             )
-            repository.upsertOccasion(occasion)
-            _event.send(CalculatorEvent.ShowToast("Saved Successfully"))
-            _event.send(CalculatorEvent.NavigateToDashboardScreen)
+            val occasionId = repository.insertOccasion(occasion)
+            _uiState.update { it.copy(occasionId = occasionId) }
+            saveJob = null
         }
     }
 
     private fun getOccasion() {
-        if (occasionId == null) return
+        if (occasionIdNavArg == null) return
         viewModelScope.launch {
-            repository.getOccasionById(occasionId)?.let { occasion ->
+            repository.getOccasionById(occasionIdNavArg)?.let { occasion ->
                 _uiState.update {
                     it.copy(
                         fromDateMillis = occasion.dateMillis,
@@ -124,6 +135,7 @@ class CalculatorViewModel(
     }
 
     private fun deleteOccasion() {
+        val occasionId = uiState.value.occasionId
         if (occasionId == null) return
         viewModelScope.launch {
             repository.deleteOccasion(occasionId)
@@ -148,9 +160,22 @@ class CalculatorViewModel(
         val diffInMinutes = fromInstant.until(toInstant, DateTimeUnit.MINUTE, timeZone)
         val diffInSeconds = fromInstant.until(toInstant, DateTimeUnit.SECOND, timeZone)
 
+        //Calculate next Anniversary
+        val fromDate = fromInstant.toLocalDateTime(timeZone).date
+        val toDate = toInstant.toLocalDateTime(timeZone).date
+
+        var nextAnniversary = LocalDate(toDate.year, fromDate.month, fromDate.dayOfMonth)
+        if (nextAnniversary < toDate) {
+            nextAnniversary = LocalDate(toDate.year + 1, fromDate.month, fromDate.dayOfMonth)
+        }
+
+        val nextAnniversaryInstant = nextAnniversary.atStartOfDayIn(timeZone)
+        val upcomingPeriod = toInstant.periodUntil(nextAnniversaryInstant, timeZone)
+
         _uiState.update {
             it.copy(
-                period = period,
+                passedPeriod = period,
+                upcomingPeriod = upcomingPeriod,
                 ageStats = AgeStats(
                     years = period.years,
                     months = diffInMonths.toInt(),

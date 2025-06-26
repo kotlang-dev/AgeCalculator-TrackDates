@@ -12,8 +12,9 @@ class OccasionRepositoryImpl(
     private val dao: OccasionDao
 ) : OccasionRepository {
 
-    override suspend fun upsertOccasion(occasion: Occasion) {
-        dao.upsertOccasion(occasion.toEntity())
+    override suspend fun insertOccasion(occasion: Occasion): Int {
+        val id = dao.insertOccasion(occasion.toEntity())
+        return id.toInt()
     }
 
     override suspend fun deleteOccasion(occasionId: Int) {
@@ -31,8 +32,8 @@ class OccasionRepositoryImpl(
                     dateMillis = 0L,
                     emoji = "🎂"
                 )
-                dao.upsertOccasion(default.toEntity())
-                listOf(default)
+                val id = dao.insertOccasion(default.toEntity())
+                listOf(default.copy(id = id.toInt()))
             }
         }
     }

@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,27 +28,26 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import com.synac.agecalculator.R
+import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.EmojiPickerDialog
 import com.synac.agecalculator.presentation.component.StatisticsCard
-import com.synac.agecalculator.presentation.component.StylizedAgeText
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
-import com.synac.agecalculator.presentation.theme.CustomBlue
-import com.synac.agecalculator.presentation.theme.CustomPink
+import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.toFormattedDateString
 import kotlinx.coroutines.flow.Flow
@@ -99,7 +100,6 @@ fun CalculatorScreen(
         CalculatorTopBar(
             isDeleteIconVisible = state.occasionId != null,
             onBackClick = navigateUp,
-            onSaveClick = { onAction(CalculatorAction.SaveOccasion) },
             onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) }
         )
         FlowRow(
@@ -110,7 +110,7 @@ fun CalculatorScreen(
             HeaderSection(
                 modifier = Modifier
                     .widthIn(max = 400.dp)
-                    .padding(MaterialTheme.spacing.small),
+                    .padding(MaterialTheme.spacing.medium),
                 state = state,
                 onAction = onAction
             )
@@ -130,8 +130,7 @@ private fun CalculatorTopBar(
     modifier: Modifier = Modifier,
     isDeleteIconVisible: Boolean,
     onBackClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     TopAppBar(
         windowInsets = WindowInsets(0),
@@ -144,7 +143,7 @@ private fun CalculatorTopBar(
                 )
             }
         },
-        title = { Text(text = "Age Calculator") },
+        title = { },
         actions = {
             if (isDeleteIconVisible) {
                 IconButton(onClick = onDeleteClick) {
@@ -153,12 +152,6 @@ private fun CalculatorTopBar(
                         contentDescription = "Delete"
                     )
                 }
-            }
-            IconButton(onClick = onSaveClick) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_save),
-                    contentDescription = "Save"
-                )
             }
         }
     )
@@ -170,35 +163,50 @@ private fun HeaderSection(
     state: CalculatorUiState,
     onAction: (CalculatorAction) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 1.dp,
-                    shape = CircleShape,
-                    brush = Brush.linearGradient(listOf(CustomBlue, CustomPink))
-                )
-                .clickable { onAction(CalculatorAction.ShowEmojiPicker) },
-            contentAlignment = Alignment.Center
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = state.emoji,
-                style = MaterialTheme.typography.displayLarge
+            Box(
+                modifier = Modifier
+                    .size(65.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, gradient, CircleShape)
+                    .clickable { onAction(CalculatorAction.ShowEmojiPicker) },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.emoji,
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
+            Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, gradient, MaterialTheme.shapes.medium),
+                value = state.title,
+                onValueChange = { onAction(CalculatorAction.SetTitle(it)) },
+                label = if (state.title.isEmpty()) {
+                    { Text(text = "Title") }
+                } else null,
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus() }
+                )
             )
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.title,
-            onValueChange = { onAction(CalculatorAction.SetTitle(it)) },
-            label = { Text(text = "Title") },
-            singleLine = true
-        )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         DateSection(
             title = "From",
@@ -223,13 +231,25 @@ private fun StatisticsSection(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        StylizedAgeText(
-            years = state.period.years,
-            months = state.period.months,
-            days = state.period.days
+        AgeBoxSection(
+            title = "Time Passed",
+            values = listOf(
+                "YEARS" to state.passedPeriod.years,
+                "MONTHS" to state.passedPeriod.months,
+                "DAYS" to state.passedPeriod.days
+            )
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+        AgeBoxSection(
+            title = "Upcoming",
+            values = listOf(
+                "MONTHS" to state.upcomingPeriod.months,
+                "DAYS" to state.upcomingPeriod.days
+            )
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         StatisticsCard(
+            title = "Statistics",
             ageStats = state.ageStats
         )
     }
