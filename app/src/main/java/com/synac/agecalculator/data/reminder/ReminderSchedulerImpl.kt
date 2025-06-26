@@ -5,6 +5,7 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.domain.repository.ReminderScheduler
+import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -27,10 +28,9 @@ class ReminderSchedulerImpl(
         val delay = calendar.timeInMillis - now
 
         val data = workDataOf(
-            "occasionId" to occasion.id,
-            "title" to "Upcoming Occasion 🎉",
-            "message" to "${occasion.title} is today!",
-            "isRepeating" to true
+            ReminderWorker.KEY_OCCASION_ID to occasion.id,
+            ReminderWorker.KEY_TITLE to "Upcoming Occasion 🎉",
+            ReminderWorker.KEY_MESSAGE to "${occasion.title} is today!",
         )
 
         val request = OneTimeWorkRequestBuilder<ReminderWorker>()
@@ -40,23 +40,11 @@ class ReminderSchedulerImpl(
             .build()
 
         workManager.enqueue(request)
+        Timber.d("Work enqueued: ${request.tags}")
     }
 
     override fun cancel(occasionId: Int) {
         workManager.cancelAllWorkByTag("reminder_$occasionId")
-    }
-
-    fun testReminder() {
-        val data = workDataOf(
-            "title" to "Test Notification 🎯",
-            "message" to "This is a test reminder triggered by WorkManager."
-        )
-
-        val request = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(10, TimeUnit.SECONDS)
-            .setInputData(data)
-            .build()
-
-        workManager.enqueue(request)
+        Timber.d("Work cancelled: $occasionId")
     }
 }

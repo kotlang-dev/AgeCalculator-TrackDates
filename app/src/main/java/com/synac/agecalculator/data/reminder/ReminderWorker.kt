@@ -11,39 +11,49 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.synac.agecalculator.R
+import timber.log.Timber
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class ReminderWorker(
-    context: Context,
+    appContext: Context,
     workerParams: WorkerParameters
-) : Worker(context, workerParams) {
+) : Worker(appContext, workerParams) {
+
+    companion object {
+        const val KEY_OCCASION_ID = "occasionId"
+        const val KEY_TITLE = "title"
+        const val KEY_MESSAGE = "message"
+    }
 
     override fun doWork(): Result {
 
-        val occasionId = inputData.getInt("occasionId", -1)
-        val isRepeating = inputData.getBoolean("isRepeating", false)
-
-        val title = inputData.getString("title") ?: "Reminder"
-        val message = inputData.getString("message") ?: "You have an event today!"
+        val occasionId = inputData.getInt(KEY_OCCASION_ID, -1)
+        val title = inputData.getString(KEY_TITLE) ?: "Reminder"
+        val message = inputData.getString(KEY_MESSAGE) ?: "You have an event today!"
 
         showNotification(title, message)
 
-        if (isRepeating && occasionId != -1) {
-            val nextOccasionDateMillis = System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
+        if (occasionId != -1) {
+            val calender = Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                add(Calendar.YEAR, 1)
+            }
+            val nextDelay = calender.timeInMillis - System.currentTimeMillis()
             val nextData = workDataOf(
-                "occasionId" to occasionId,
-                "title" to title,
-                "message" to message,
-                "isRepeating" to true
+                KEY_OCCASION_ID to occasionId,
+                KEY_TITLE to title,
+                KEY_MESSAGE to message
             )
 
             val nextRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-                .setInitialDelay(365, TimeUnit.DAYS)
+                .setInitialDelay(nextDelay, TimeUnit.MILLISECONDS)
                 .setInputData(nextData)
                 .addTag("reminder_$occasionId")
                 .build()
 
             WorkManager.getInstance(applicationContext).enqueue(nextRequest)
+            Timber.d("Work enqueued: ${nextRequest.tags}")
         }
 
         return Result.success()
@@ -54,6 +64,7 @@ class ReminderWorker(
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        //Create Notification Channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
