@@ -83,7 +83,7 @@ class CalculatorViewModel(
 
                     DateField.TO -> {
                         _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
+                            it.copy(isDatePickerDialogOpen = false, toDateMillis = action.millis)
                         }
                     }
                 }
