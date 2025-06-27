@@ -16,7 +16,7 @@ interface OccasionDao {
     suspend fun deleteOccasion(occasionId: Int)
 
     @Query("SELECT * FROM occasions ORDER BY dateMillis DESC")
-    fun getAllOccasions(): Flow<List<OccasionEntity>> //TODO change the name to observeOccasions
+    fun observeOccasions(): Flow<List<OccasionEntity>>
 
     @Query("SELECT * FROM occasions WHERE id = :occasionId")
     suspend fun getOccasionById(occasionId: Int): OccasionEntity?

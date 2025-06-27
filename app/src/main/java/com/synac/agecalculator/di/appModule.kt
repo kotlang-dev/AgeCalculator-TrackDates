@@ -18,10 +18,10 @@ import org.koin.dsl.module
 val appModule = module {
 
     single<OccasionDatabase> { DatabaseFactory.create(get()) }
-    single<OccasionDao> { get<OccasionDatabase>().occasionDao() }
+    single<OccasionDao> { get<OccasionDatabase>().occasionDao }
     single<WorkManager> { WorkManager.getInstance(get()) }
 
-    singleOf(::OccasionRepositoryImpl).bind<OccasionRepository>()
+    singleOf(::OccasionRepositoryImpl) bind OccasionRepository::class
     singleOf(::ReminderSchedulerImpl) bind ReminderScheduler::class
 
     viewModelOf(::CalculatorViewModel)

@@ -9,37 +9,39 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class OccasionRepositoryImpl(
-    private val dao: OccasionDao
+    private val occasionDao: OccasionDao
 ) : OccasionRepository {
 
     override suspend fun insertOccasion(occasion: Occasion): Int {
-        val id = dao.insertOccasion(occasion.toEntity())
+        val id = occasionDao.insertOccasion(occasion.toEntity())
         return id.toInt()
     }
 
     override suspend fun deleteOccasion(occasionId: Int) {
-        dao.deleteOccasion(occasionId)
+        occasionDao.deleteOccasion(occasionId)
     }
 
-    override fun getAllOccasions(): Flow<List<Occasion>> {
-        return dao.getAllOccasions().map { occasionEntities ->
-            if (occasionEntities.isNotEmpty()) {
-                occasionEntities.map { it.toDomain() }
-            } else {
-                val default = Occasion(
-                    id = null,
-                    title = "Birthday",
-                    dateMillis = 0L,
-                    emoji = "🎂",
-                    isReminderEnabled = false
-                )
-                val id = dao.insertOccasion(default.toEntity())
-                listOf(default.copy(id = id.toInt()))
+    override fun observeOccasions(): Flow<List<Occasion>> {
+        return occasionDao
+            .observeOccasions()
+            .map { occasionEntities ->
+                if (occasionEntities.isNotEmpty()) {
+                    occasionEntities.map { it.toDomain() }
+                } else {
+                    val default = Occasion(
+                        id = null,
+                        title = "Birthday",
+                        dateMillis = 0L,
+                        emoji = "🎂",
+                        isReminderEnabled = false
+                    )
+                    val id = occasionDao.insertOccasion(default.toEntity())
+                    listOf(default.copy(id = id.toInt()))
+                }
             }
-        }
     }
 
     override suspend fun getOccasionById(occasionId: Int): Occasion? {
-        return dao.getOccasionById(occasionId)?.toDomain()
+        return occasionDao.getOccasionById(occasionId)?.toDomain()
     }
 }

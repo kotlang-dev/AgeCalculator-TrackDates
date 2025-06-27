@@ -74,38 +74,14 @@ class CalculatorViewModel(
                 _uiState.update { it.copy(isDatePickerDialogOpen = false) }
             }
 
-            is CalculatorAction.DateSelected -> {
-                when (uiState.value.activeDateField) {
-                    DateField.FROM -> {
-                        _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
-                        }
-                        saveOccasion()
-                    }
-
-                    DateField.TO -> {
-                        _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, toDateMillis = action.millis)
-                        }
-                    }
-                }
-                calculateStats()
-            }
-
             is CalculatorAction.SetTitle -> {
                 _uiState.update { it.copy(title = action.title) }
                 saveOccasion()
             }
 
-            CalculatorAction.DeleteOccasion -> {
-                deleteOccasion()
-            }
-
-            CalculatorAction.ToggleReminder -> {
-                _uiState.update { it.copy(isReminderEnabled = !it.isReminderEnabled) }
-                saveOccasion()
-                toggleReminder()
-            }
+            is CalculatorAction.DateSelected -> onDateSelected(action.millis)
+            CalculatorAction.DeleteOccasion -> deleteOccasion()
+            CalculatorAction.ToggleReminder -> toggleReminder()
         }
     }
 
@@ -117,7 +93,7 @@ class CalculatorViewModel(
                 id = uiState.value.occasionId,
                 dateMillis = uiState.value.fromDateMillis,
                 emoji = uiState.value.emoji,
-                title = uiState.value.title,
+                title = uiState.value.title.trim(),
                 isReminderEnabled = uiState.value.isReminderEnabled
             )
             val occasionId = repository.insertOccasion(occasion)
@@ -155,7 +131,9 @@ class CalculatorViewModel(
         }
     }
 
-    fun toggleReminder() {
+    private fun toggleReminder() {
+        _uiState.update { it.copy(isReminderEnabled = !it.isReminderEnabled) }
+        saveOccasion()
         val occasion = Occasion(
             id = uiState.value.occasionId,
             dateMillis = uiState.value.fromDateMillis,
@@ -170,6 +148,24 @@ class CalculatorViewModel(
             occasion.id?.let { reminderScheduler.cancel(it) }
             _event.trySend(CalculatorEvent.ShowToast("Reminder Disabled"))
         }
+    }
+
+    private fun onDateSelected(dateMillis: Long?) {
+        when (uiState.value.activeDateField) {
+            DateField.FROM -> {
+                _uiState.update {
+                    it.copy(isDatePickerDialogOpen = false, fromDateMillis = dateMillis)
+                }
+                saveOccasion()
+            }
+
+            DateField.TO -> {
+                _uiState.update {
+                    it.copy(isDatePickerDialogOpen = false, toDateMillis = dateMillis)
+                }
+            }
+        }
+        calculateStats()
     }
 
     private fun calculateStats() {

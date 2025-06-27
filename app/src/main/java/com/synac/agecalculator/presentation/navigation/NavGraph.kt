@@ -41,7 +41,7 @@ fun NavGraph(
                 state = state,
                 event = viewModel.event,
                 onAction = viewModel::onAction,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = navController::navigateUp
             )
         }
     }
