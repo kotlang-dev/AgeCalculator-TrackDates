@@ -23,7 +23,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
@@ -86,7 +85,7 @@ class CalculatorViewModel(
 
                     DateField.TO -> {
                         _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
+                            it.copy(isDatePickerDialogOpen = false, toDateMillis = action.millis)
                         }
                     }
                 }
