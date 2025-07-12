@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.1"
+appUpdateKtx = "2.1.0"
 kotlin = "2.1.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -14,13 +15,15 @@ kotlinxSerializationJson = "1.7.3"
 room = "2.7.2"
 ksp = "2.1.20-2.0.1"
 koin = "4.0.1"
-uiTextGoogleFonts = "1.8.2"
+uiTextGoogleFonts = "1.8.3"
 coreSplashscreen = "1.0.1"
 workRuntimeKtx = "2.10.2"
 timber = "5.0.1"
+datastorePreferences = "1.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -36,6 +39,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime"}
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}

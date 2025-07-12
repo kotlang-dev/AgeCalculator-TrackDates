@@ -1,17 +1,17 @@
 package com.synac.agecalculator.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.synac.agecalculator.presentation.calculator.CalculatorScreen
-import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
-import com.synac.agecalculator.presentation.dashboard.DashboardScreen
-import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
-import org.koin.androidx.compose.koinViewModel
+import androidx.navigation.toRoute
+import com.synac.agecalculator.presentation.calculator.CalculatorScreenRoot
+import com.synac.agecalculator.presentation.dashboard.DashboardScreenRoot
+import com.synac.agecalculator.presentation.settings.SettingsScreenRoot
+import com.synac.agecalculator.presentation.util.decodeUrl
+import com.synac.agecalculator.presentation.util.encodeUrl
+import com.synac.agecalculator.presentation.webview.WebViewScreen
 
 @Composable
 fun NavGraph(
@@ -24,24 +24,33 @@ fun NavGraph(
         navController = navController
     ) {
         composable<Route.DashboardScreen> {
-            val viewModel: DashboardViewModel = koinViewModel()
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
-            DashboardScreen(
-                state = state,
-                onAction = viewModel::onAction,
+            DashboardScreenRoot(
                 navigateToCalculatorScreen = { occasionId ->
                     navController.navigate(Route.CalculatorScreen(occasionId))
+                },
+                navigateToSettingsScreen = {
+                    navController.navigate(Route.SettingsScreen)
                 }
             )
         }
         composable<Route.CalculatorScreen> {
-            val viewModel: CalculatorViewModel = koinViewModel()
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
-            CalculatorScreen(
-                state = state,
-                event = viewModel.event,
-                onAction = viewModel::onAction,
+            CalculatorScreenRoot(
                 navigateUp = navController::navigateUp
+            )
+        }
+        composable<Route.SettingsScreen> {
+            SettingsScreenRoot(
+                navigateUp = navController::navigateUp,
+                navigateToPrivacyPolicy = { policyUrl ->
+                    navController.navigate(Route.WebView(policyUrl.encodeUrl()))
+                }
+            )
+        }
+        composable<Route.WebView> { backStackEntry ->
+            val args = backStackEntry.toRoute<Route.WebView>()
+            WebViewScreen(
+                url = args.url.decodeUrl(),
+                onNavigateBack = { navController.navigateUp() }
             )
         }
     }

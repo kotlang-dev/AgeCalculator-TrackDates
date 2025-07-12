@@ -8,4 +8,8 @@ sealed interface Route {
     data object DashboardScreen : Route
     @Serializable
     data class CalculatorScreen(val id: Int?) : Route
+    @Serializable
+    data object SettingsScreen : Route
+    @Serializable
+    data class WebView(val url: String) : Route
 }

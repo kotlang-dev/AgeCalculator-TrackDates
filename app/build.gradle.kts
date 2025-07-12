@@ -66,6 +66,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.app.update.ktx)
     implementation(libs.kotlinx.datetime)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
@@ -73,6 +74,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.timber)
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.navigation)

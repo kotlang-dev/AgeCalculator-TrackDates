@@ -45,6 +45,9 @@ class DashboardViewModel(
                 _uiState.update { it.copy(isDatePickerDialogOpen = false) }
                 updateOccasion(action.millis)
             }
+
+            is DashboardAction.NavigateToCalculatorScreen -> {}
+            DashboardAction.NavigateToSettingsScreen -> {}
         }
     }
 

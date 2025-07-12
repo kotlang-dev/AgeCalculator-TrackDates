@@ -82,6 +82,7 @@ class CalculatorViewModel(
             is CalculatorAction.DateSelected -> onDateSelected(action.millis)
             CalculatorAction.DeleteOccasion -> deleteOccasion()
             CalculatorAction.ToggleReminder -> toggleReminder()
+            CalculatorAction.NavigateUp -> {}
         }
     }
 
@@ -173,6 +174,7 @@ class CalculatorViewModel(
         val fromMillis = _uiState.value.fromDateMillis ?: System.currentTimeMillis()
         val toMillis = _uiState.value.toDateMillis ?: System.currentTimeMillis()
 
+        //TODO update to new date time api
         val fromInstant = Instant.fromEpochMilliseconds(fromMillis)
         val toInstant = Instant.fromEpochMilliseconds(toMillis)
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,6 +33,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.EmojiPickerDialog
@@ -51,32 +52,46 @@ import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CalculatorScreen(
-    state: CalculatorUiState,
-    event: Flow<CalculatorEvent>,
-    onAction: (CalculatorAction) -> Unit,
+fun CalculatorScreenRoot(
     navigateUp: () -> Unit
 ) {
+
+    val viewModel: CalculatorViewModel = koinViewModel()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        event.collect { event ->
+        viewModel.event.collect { event ->
             when (event) {
                 is CalculatorEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
 
-                CalculatorEvent.NavigateToDashboardScreen -> {
-                    navigateUp()
-                }
+                CalculatorEvent.NavigateToDashboardScreen -> navigateUp()
             }
         }
     }
+
+    CalculatorScreen(
+        state = state,
+        onAction = { action ->
+            when(action) {
+                is CalculatorAction.NavigateUp -> navigateUp()
+                else -> viewModel.onAction(action)
+            }
+        }
+    )
+}
+
+@Composable
+private fun CalculatorScreen(
+    state: CalculatorUiState,
+    onAction: (CalculatorAction) -> Unit
+) {
 
     EmojiPickerDialog(
         isOpen = state.isEmojiDialogOpen,
@@ -101,7 +116,7 @@ fun CalculatorScreen(
         CalculatorTopBar(
             isDeleteIconVisible = state.occasionId != null,
             isReminderEnabled = state.isReminderEnabled,
-            onBackClick = navigateUp,
+            onBackClick = { onAction(CalculatorAction.NavigateUp) },
             onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) },
             onReminderClick = { onAction(CalculatorAction.ToggleReminder) }
         )
@@ -138,7 +153,6 @@ private fun CalculatorTopBar(
     onReminderClick: () -> Unit
 ) {
     TopAppBar(
-        windowInsets = WindowInsets(0),
         modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -294,9 +308,7 @@ private fun PreviewCalculatorScreen() {
     AgeCalculatorTheme {
         CalculatorScreen(
             state = CalculatorUiState(),
-            onAction = {},
-            navigateUp = {},
-            event = emptyFlow()
+            onAction = {}
         )
     }
 }
