@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -77,6 +78,18 @@ private fun SettingsScreen(
                 }
                 onAction(SettingAction.ChangeAppTheme(newThemeValue))
             }
+        )
+        Text(
+            text = "About",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        SettingsItemCard(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            title = "Privacy Policy",
+            iconResId = R.drawable.ic_privacy_tip_filled,
+            onClick = { onAction(SettingAction.PrivacyPolicyClick) }
         )
     }
 }
