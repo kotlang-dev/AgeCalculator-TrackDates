@@ -17,5 +17,3 @@ class MainApplication: Application() {
         }
     }
 }
-
-// A teammate's change
