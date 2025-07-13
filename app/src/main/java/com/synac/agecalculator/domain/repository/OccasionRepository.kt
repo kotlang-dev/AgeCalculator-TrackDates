@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface OccasionRepository {
     suspend fun insertOccasion(occasion: Occasion): Int
     suspend fun deleteOccasion(occasionId: Int)
-    fun getAllOccasions(): Flow<List<Occasion>>
+    fun observeOccasions(): Flow<List<Occasion>>
     suspend fun getOccasionById(occasionId: Int): Occasion?
 }

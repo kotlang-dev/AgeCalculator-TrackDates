@@ -17,7 +17,7 @@ class DashboardViewModel(
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState = combine(
         _uiState,
-        repository.getAllOccasions()
+        repository.observeOccasions()
     ) { state, occasions ->
         state.copy(occasions = occasions)
     }.stateIn(
