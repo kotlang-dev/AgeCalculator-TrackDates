@@ -11,6 +11,7 @@ import com.synac.agecalculator.presentation.calculator.CalculatorScreen
 import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
 import com.synac.agecalculator.presentation.dashboard.DashboardScreen
 import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
+import com.synac.agecalculator.presentation.settings.SettingsScreenRoot
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -31,6 +32,9 @@ fun NavGraph(
                 onAction = viewModel::onAction,
                 navigateToCalculatorScreen = { occasionId ->
                     navController.navigate(Route.CalculatorScreen(occasionId))
+                },
+                navigateToSettingsScreen = {
+                    navController.navigate(Route.SettingsScreen)
                 }
             )
         }
@@ -42,6 +46,12 @@ fun NavGraph(
                 event = viewModel.event,
                 onAction = viewModel::onAction,
                 navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable<Route.SettingsScreen> {
+            SettingsScreenRoot(
+                navigateUp = navController::navigateUp,
+                navigateToPrivacyPolicy = { }
             )
         }
     }

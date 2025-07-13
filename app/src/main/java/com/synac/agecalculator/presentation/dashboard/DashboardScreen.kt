@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
@@ -47,7 +48,8 @@ import com.synac.agecalculator.presentation.util.toFormattedDateString
 fun DashboardScreen(
     state: DashboardUiState,
     onAction: (DashboardAction) -> Unit,
-    navigateToCalculatorScreen: (Int?) -> Unit
+    navigateToCalculatorScreen: (Int?) -> Unit,
+    navigateToSettingsScreen: () -> Unit,
 ) {
 
     CustomDatePickerDialog(
@@ -62,7 +64,8 @@ fun DashboardScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         DashboardTopBar(
-            onAddIconClick = { navigateToCalculatorScreen(null) }
+            onAddIconClick = { navigateToCalculatorScreen(null) },
+            onSettingsIconClick = navigateToSettingsScreen
         )
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 400.dp),
@@ -88,6 +91,7 @@ fun DashboardScreen(
 private fun DashboardTopBar(
     modifier: Modifier = Modifier,
     onAddIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit
 ) {
     TopAppBar(
         windowInsets = WindowInsets(0),
@@ -98,6 +102,12 @@ private fun DashboardTopBar(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add"
+                )
+            }
+            IconButton(onClick = onSettingsIconClick) {
+                Icon(
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Settings"
                 )
             }
         }
@@ -178,6 +188,7 @@ private fun PreviewDashboardScreen() {
     DashboardScreen(
         state = DashboardUiState(occasions = dummyOccasions),
         onAction = {},
-        navigateToCalculatorScreen = {}
+        navigateToCalculatorScreen = {},
+        navigateToSettingsScreen = {}
     )
 }
