@@ -33,7 +33,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SettingsScreenRoot(
     navigateToPrivacyPolicy: (String) -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    onAppVersionClick: () -> Unit
 ) {
     val viewModel = koinViewModel<SettingsViewModel>()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -47,8 +48,8 @@ fun SettingsScreenRoot(
                         "https://synac-apps.github.io/age-calculator-privacy-policy/"
                     navigateToPrivacyPolicy(privacyPolicy)
                 }
-
-                is SettingAction.OnBackClick -> navigateUp()
+                SettingAction.AppVersionClick -> onAppVersionClick()
+                SettingAction.OnBackClick -> navigateUp()
                 is SettingAction.ChangeAppTheme -> viewModel.onThemeChanged(action.theme)
             }
         }
@@ -83,6 +84,13 @@ private fun SettingsScreen(
             text = "About",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp)
+        )
+        SettingsItemCard(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            title = "App Version",
+            iconResId = R.drawable.ic_launcher_foreground,
+            onClick = { onAction(SettingAction.AppVersionClick) },
+            trailingContent = { Text(text = state.appVersion) }
         )
         Spacer(modifier = Modifier.height(12.dp))
         SettingsItemCard(

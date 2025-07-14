@@ -15,7 +15,8 @@ import com.synac.agecalculator.presentation.webview.WebViewScreen
 
 @Composable
 fun NavGraph(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAppVersionClick: () -> Unit
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -43,7 +44,8 @@ fun NavGraph(
                 navigateUp = navController::navigateUp,
                 navigateToPrivacyPolicy = { policyUrl ->
                     navController.navigate(Route.WebView(policyUrl.encodeUrl()))
-                }
+                },
+                onAppVersionClick = onAppVersionClick
             )
         }
         composable<Route.WebView> { backStackEntry ->

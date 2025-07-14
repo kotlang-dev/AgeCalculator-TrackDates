@@ -66,10 +66,7 @@ fun CalculatorScreenRoot(
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
-                is CalculatorEvent.ShowToast -> {
-                    showToast(context, event.message)
-                }
-
+                is CalculatorEvent.ShowToast -> showToast(context, event.message)
                 CalculatorEvent.NavigateToDashboardScreen -> navigateUp()
             }
         }
@@ -78,7 +75,7 @@ fun CalculatorScreenRoot(
     CalculatorScreen(
         state = state,
         onAction = { action ->
-            when(action) {
+            when (action) {
                 is CalculatorAction.NavigateUp -> navigateUp()
                 else -> viewModel.onAction(action)
             }

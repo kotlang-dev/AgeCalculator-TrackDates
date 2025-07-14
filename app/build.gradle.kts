@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.app.update.ktx)
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.navigation)
