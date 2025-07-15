@@ -22,10 +22,10 @@ class SettingsViewModel(
     )
     val uiState = combine(
         _uiState,
-        preferenceRepository.getPreference(PrefsKey.AppTheme, AppTheme.AUTO.value)
-    ) { uiState, themeSetting ->
+        preferenceRepository.getPreference(PrefsKey.AppTheme, AppTheme.AUTO.name)
+    ) { uiState, themeName ->
         uiState.copy(
-            appTheme = themeSetting
+            appTheme = AppTheme.fromString(themeName)
         )
     }.stateIn(
         scope = viewModelScope,
@@ -33,11 +33,11 @@ class SettingsViewModel(
         initialValue = SettingsUiState()
     )
 
-    fun onThemeChanged(newThemeValue: Int) {
+    fun onThemeChanged(newTheme: AppTheme) {
         viewModelScope.launch {
             preferenceRepository.savePreference(
                 key = PrefsKey.AppTheme,
-                value = newThemeValue
+                value = newTheme.name
             )
         }
     }

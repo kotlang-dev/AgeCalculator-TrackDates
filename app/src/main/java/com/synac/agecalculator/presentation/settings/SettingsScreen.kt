@@ -72,10 +72,9 @@ private fun SettingsScreen(
             theme = state.appTheme,
             onClick = {
                 val newThemeValue = when (state.appTheme) {
-                    AppTheme.AUTO.value -> AppTheme.LIGHT.value
-                    AppTheme.LIGHT.value -> AppTheme.DARK.value
-                    AppTheme.DARK.value -> AppTheme.AUTO.value
-                    else -> 0
+                    AppTheme.AUTO -> AppTheme.LIGHT
+                    AppTheme.LIGHT -> AppTheme.DARK
+                    AppTheme.DARK -> AppTheme.AUTO
                 }
                 onAction(SettingAction.ChangeAppTheme(newThemeValue))
             }
@@ -130,20 +129,20 @@ private fun SettingsTopBar(
 @Composable
 private fun ThemeSettingsItem(
     modifier: Modifier = Modifier,
-    theme: Int,
+    theme: AppTheme,
     onClick: () -> Unit
 ) {
     val themeText = remember(theme) {
         when (theme) {
-            AppTheme.LIGHT.value -> "Light"
-            AppTheme.DARK.value -> "Dark"
+            AppTheme.LIGHT -> "Light"
+            AppTheme.DARK -> "Dark"
             else -> "Auto"
         }
     }
     val themeIconResId = remember(theme) {
         when (theme) {
-            AppTheme.LIGHT.value -> R.drawable.ic_light_mode
-            AppTheme.DARK.value -> R.drawable.ic_dark_mode
+            AppTheme.LIGHT -> R.drawable.ic_light_mode
+            AppTheme.DARK -> R.drawable.ic_dark_mode
             else -> R.drawable.ic_theme_auto
         }
     }

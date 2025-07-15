@@ -15,7 +15,7 @@ import com.synac.agecalculator.data.repository.PreferenceRepositoryImpl
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.repository.PreferenceRepository
-import com.synac.agecalculator.presentation.MainViewModel
+import com.synac.agecalculator.presentation.main_activity.MainViewModel
 import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
 import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
 import com.synac.agecalculator.presentation.settings.SettingsViewModel

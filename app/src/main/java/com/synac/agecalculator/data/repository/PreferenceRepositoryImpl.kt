@@ -3,8 +3,8 @@ package com.synac.agecalculator.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.synac.agecalculator.domain.model.PrefsKey
 import com.synac.agecalculator.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ class PreferenceRepositoryImpl(
     @Suppress("UNCHECKED_CAST")
     fun <T> PrefsKey<T>.toDatastoreKey(): Preferences.Key<T> {
         return when (this) {
-            PrefsKey.AppTheme -> intPreferencesKey(name)
+            PrefsKey.AppTheme -> stringPreferencesKey(name)
             PrefsKey.LastUpdatePrompt -> longPreferencesKey(name)
         } as Preferences.Key<T>
     }
