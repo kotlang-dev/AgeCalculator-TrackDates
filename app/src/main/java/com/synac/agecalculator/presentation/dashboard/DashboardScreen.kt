@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
+import com.synac.agecalculator.presentation.component.ReminderIcon
 import com.synac.agecalculator.presentation.component.StylizedAgeText
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.periodUntil
@@ -179,22 +180,27 @@ private fun OccasionCard(
             months = dateMillis.periodUntil().months,
             days = dateMillis.periodUntil().days
         )
-        FilledIconButton(
-            onClick = onClick,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.small)
-                .align(Alignment.End)
-                .size(25.dp),
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
+        Row(
+            modifier = Modifier.align(Alignment.End),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                modifier = Modifier.padding(MaterialTheme.spacing.extraSmall),
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Show Details"
-            )
+            ReminderIcon(isReminderEnabled = occasion.isReminderEnabled)
+            FilledIconButton(
+                onClick = onClick,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.small)
+                    .size(25.dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Icon(
+                    modifier = Modifier.padding(MaterialTheme.spacing.extraSmall),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Show Details"
+                )
+            }
         }
     }
 }
@@ -203,7 +209,13 @@ private fun OccasionCard(
 @Composable
 private fun PreviewDashboardScreen() {
     val dummyOccasions = List(20) {
-        Occasion(id = 1, title = "Birthday", dateMillis = 0L, emoji = "🎂", isReminderEnabled = false)
+        Occasion(
+            id = 1,
+            title = "Birthday",
+            dateMillis = 0L,
+            emoji = "🎂",
+            isReminderEnabled = false
+        )
     }
     DashboardScreen(
         state = DashboardUiState(occasions = dummyOccasions),

@@ -13,7 +13,8 @@ data class CalculatorUiState(
     val passedPeriod: DateTimePeriod = DateTimePeriod(),
     val upcomingPeriod: DateTimePeriod = DateTimePeriod(),
     val ageStats: AgeStats = AgeStats(),
-    val occasionId: Int? = null
+    val occasionId: Int? = null,
+    val isReminderEnabled: Boolean = false
 )
 
 enum class DateField {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.domain.repository.OccasionRepository
+import com.synac.agecalculator.domain.repository.ReminderScheduler
 import com.synac.agecalculator.presentation.navigation.Route
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -27,7 +28,8 @@ import kotlinx.datetime.until
 
 class CalculatorViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: OccasionRepository
+    private val repository: OccasionRepository,
+    private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     val occasionIdNavArg = savedStateHandle.toRoute<Route.CalculatorScreen>().id
@@ -72,33 +74,14 @@ class CalculatorViewModel(
                 _uiState.update { it.copy(isDatePickerDialogOpen = false) }
             }
 
-            is CalculatorAction.DateSelected -> {
-                when (uiState.value.activeDateField) {
-                    DateField.FROM -> {
-                        _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, fromDateMillis = action.millis)
-                        }
-                        saveOccasion()
-                    }
-
-                    DateField.TO -> {
-                        _uiState.update {
-                            it.copy(isDatePickerDialogOpen = false, toDateMillis = action.millis)
-                        }
-                    }
-                }
-                calculateStats()
-            }
-
             is CalculatorAction.SetTitle -> {
                 _uiState.update { it.copy(title = action.title) }
                 saveOccasion()
             }
 
-            CalculatorAction.DeleteOccasion -> {
-                deleteOccasion()
-            }
-
+            is CalculatorAction.DateSelected -> onDateSelected(action.millis)
+            CalculatorAction.DeleteOccasion -> deleteOccasion()
+            CalculatorAction.ToggleReminder -> toggleReminder()
             CalculatorAction.NavigateUp -> {}
         }
     }
@@ -112,7 +95,7 @@ class CalculatorViewModel(
                 dateMillis = uiState.value.fromDateMillis,
                 emoji = uiState.value.emoji,
                 title = uiState.value.title,
-                isReminderEnabled = false
+                isReminderEnabled = uiState.value.isReminderEnabled
             )
             val occasionId = repository.insertOccasion(occasion)
             _uiState.update { it.copy(occasionId = occasionId) }
@@ -129,7 +112,8 @@ class CalculatorViewModel(
                         fromDateMillis = occasion.dateMillis,
                         emoji = occasion.emoji,
                         title = occasion.title,
-                        occasionId = occasion.id
+                        occasionId = occasion.id,
+                        isReminderEnabled = occasion.isReminderEnabled
                     )
                 }
             }
@@ -145,6 +129,43 @@ class CalculatorViewModel(
             _event.send(CalculatorEvent.ShowToast("Deleted Successfully"))
             _event.send(CalculatorEvent.NavigateToDashboardScreen)
         }
+    }
+
+    private fun toggleReminder() {
+        _uiState.update { it.copy(isReminderEnabled = !it.isReminderEnabled) }
+        saveOccasion()
+        val occasion = Occasion(
+            id = uiState.value.occasionId,
+            dateMillis = uiState.value.fromDateMillis,
+            emoji = uiState.value.emoji,
+            title = uiState.value.title,
+            isReminderEnabled = uiState.value.isReminderEnabled
+        )
+        if (occasion.isReminderEnabled) {
+            reminderScheduler.schedule(occasion)
+            _event.trySend(CalculatorEvent.ShowToast("Reminder Enabled"))
+        } else {
+            occasion.id?.let { reminderScheduler.cancel(it) }
+            _event.trySend(CalculatorEvent.ShowToast("Reminder Disabled"))
+        }
+    }
+
+    private fun onDateSelected(dateMillis: Long?) {
+        when (uiState.value.activeDateField) {
+            DateField.FROM -> {
+                _uiState.update {
+                    it.copy(isDatePickerDialogOpen = false, fromDateMillis = dateMillis)
+                }
+                saveOccasion()
+            }
+
+            DateField.TO -> {
+                _uiState.update {
+                    it.copy(isDatePickerDialogOpen = false, toDateMillis = dateMillis)
+                }
+            }
+        }
+        calculateStats()
     }
 
     private fun calculateStats() {

@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.EmojiPickerDialog
+import com.synac.agecalculator.presentation.component.ReminderIcon
 import com.synac.agecalculator.presentation.component.StatisticsCard
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
@@ -112,8 +113,10 @@ fun CalculatorScreen(
     ) {
         CalculatorTopBar(
             isDeleteIconVisible = state.occasionId != null,
+            isReminderEnabled = state.isReminderEnabled,
             onBackClick = { onAction(CalculatorAction.NavigateUp) },
-            onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) }
+            onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) },
+            onReminderClick = { onAction(CalculatorAction.ToggleReminder) }
         )
         FlowRow(
             modifier = Modifier
@@ -142,8 +145,10 @@ fun CalculatorScreen(
 private fun CalculatorTopBar(
     modifier: Modifier = Modifier,
     isDeleteIconVisible: Boolean,
+    isReminderEnabled: Boolean,
     onBackClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onReminderClick: () -> Unit
 ) {
     TopAppBar(
         modifier = modifier,
@@ -157,6 +162,9 @@ private fun CalculatorTopBar(
         },
         title = { },
         actions = {
+            IconButton(onClick = onReminderClick) {
+                ReminderIcon(isReminderEnabled = isReminderEnabled)
+            }
             if (isDeleteIconVisible) {
                 IconButton(onClick = onDeleteClick) {
                     Icon(
