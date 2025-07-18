@@ -1,5 +1,8 @@
 package com.synac.agecalculator.presentation.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -48,7 +51,10 @@ fun NavGraph(
                 onAppVersionClick = onAppVersionClick
             )
         }
-        composable<Route.WebView> { backStackEntry ->
+        composable<Route.WebView>(
+            enterTransition = { slideInTransition() },
+            exitTransition = { slideOutTransition() },
+        )  { backStackEntry ->
             val args = backStackEntry.toRoute<Route.WebView>()
             WebViewScreen(
                 url = args.url.decodeUrl(),
@@ -57,3 +63,13 @@ fun NavGraph(
         }
     }
 }
+
+fun slideInTransition() = slideInHorizontally(
+    initialOffsetX = { it },
+    animationSpec = tween(300)
+)
+
+fun slideOutTransition() = slideOutHorizontally(
+    targetOffsetX = { it },
+    animationSpec = tween(300)
+)

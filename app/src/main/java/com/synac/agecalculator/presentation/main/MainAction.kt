@@ -1,4 +1,4 @@
-package com.synac.agecalculator.presentation.main_activity
+package com.synac.agecalculator.presentation.main
 
 sealed interface MainAction {
     data object AppUpdateDownloading : MainAction
