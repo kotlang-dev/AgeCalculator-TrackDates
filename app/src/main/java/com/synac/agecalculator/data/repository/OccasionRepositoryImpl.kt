@@ -32,7 +32,8 @@ class OccasionRepositoryImpl(
                         id = null,
                         title = "Birthday",
                         dateMillis = 0L,
-                        emoji = "🎂"
+                        emoji = "🎂",
+                        isReminderEnabled = false
                     )
                     val id = occasionDao.insertOccasion(default.toEntity())
                     listOf(default.copy(id = id.toInt()))

@@ -5,16 +5,19 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.synac.agecalculator.data.local.OccasionDao
 import com.synac.agecalculator.data.local.OccasionDatabase
+import com.synac.agecalculator.data.reminder.ReminderSchedulerImpl
 import com.synac.agecalculator.data.repository.AppUpdateRepositoryImpl
 import com.synac.agecalculator.data.repository.OccasionRepositoryImpl
 import com.synac.agecalculator.data.repository.PreferenceRepositoryImpl
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.repository.PreferenceRepository
+import com.synac.agecalculator.domain.repository.ReminderScheduler
 import com.synac.agecalculator.presentation.main.MainViewModel
 import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
 import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
@@ -28,6 +31,7 @@ import org.koin.dsl.module
 
 val appModule = module {
 
+    //Room Db
     single<OccasionDatabase> {
         Room
             .databaseBuilder(
@@ -49,6 +53,11 @@ val appModule = module {
     }
     singleOf(::PreferenceRepositoryImpl) bind PreferenceRepository::class
 
+    //Reminder
+    single<WorkManager> { WorkManager.getInstance(get()) }
+    singleOf(::ReminderSchedulerImpl) bind ReminderScheduler::class
+
+    //App Update
     single<AppUpdateManager> { AppUpdateManagerFactory.create(androidContext()) }
     singleOf(::AppUpdateRepositoryImpl) bind AppUpdateRepository::class
 

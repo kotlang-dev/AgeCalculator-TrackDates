@@ -111,7 +111,8 @@ class CalculatorViewModel(
                 id = uiState.value.occasionId,
                 dateMillis = uiState.value.fromDateMillis,
                 emoji = uiState.value.emoji,
-                title = uiState.value.title
+                title = uiState.value.title,
+                isReminderEnabled = false
             )
             val occasionId = repository.insertOccasion(occasion)
             _uiState.update { it.copy(occasionId = occasionId) }
