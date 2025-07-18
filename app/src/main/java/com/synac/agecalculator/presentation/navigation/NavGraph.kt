@@ -37,7 +37,10 @@ fun NavGraph(
                 }
             )
         }
-        composable<Route.CalculatorScreen> {
+        composable<Route.CalculatorScreen>(
+            enterTransition = { slideInTransition() },
+            exitTransition = { slideOutTransition() },
+        ) {
             CalculatorScreenRoot(
                 navigateUp = navController::navigateUp
             )
@@ -54,7 +57,7 @@ fun NavGraph(
         composable<Route.WebView>(
             enterTransition = { slideInTransition() },
             exitTransition = { slideOutTransition() },
-        )  { backStackEntry ->
+        ) { backStackEntry ->
             val args = backStackEntry.toRoute<Route.WebView>()
             WebViewScreen(
                 url = args.url.decodeUrl(),

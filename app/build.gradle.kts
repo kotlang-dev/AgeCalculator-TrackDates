@@ -15,8 +15,8 @@ android {
         applicationId = "com.synac.agecalculator"
         minSdk = 21
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.6"
+        versionCode = 6
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
