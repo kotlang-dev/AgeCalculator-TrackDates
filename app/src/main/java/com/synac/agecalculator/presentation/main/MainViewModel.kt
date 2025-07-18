@@ -6,8 +6,8 @@ import com.synac.agecalculator.domain.model.PrefsKey
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import com.synac.agecalculator.domain.repository.PreferenceRepository
 import com.synac.agecalculator.presentation.util.AppTheme
-import com.synac.agecalculator.presentation.util.Constant.MIN_STALENESS_DAYS
-import com.synac.agecalculator.presentation.util.Constant.PROMPT_COOLDOWN_MILLIS
+import com.synac.agecalculator.presentation.util.Constants.MIN_STALENESS_DAYS
+import com.synac.agecalculator.presentation.util.Constants.PROMPT_COOLDOWN_MILLIS
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

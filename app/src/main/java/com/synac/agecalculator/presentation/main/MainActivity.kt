@@ -38,7 +38,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.synac.agecalculator.presentation.navigation.NavGraph
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.util.AppTheme
-import com.synac.agecalculator.presentation.util.Constant.APP_UPDATE_REQUEST_CODE
+import com.synac.agecalculator.presentation.util.Constants.APP_UPDATE_REQUEST_CODE
 import com.synac.agecalculator.presentation.util.showToast
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject

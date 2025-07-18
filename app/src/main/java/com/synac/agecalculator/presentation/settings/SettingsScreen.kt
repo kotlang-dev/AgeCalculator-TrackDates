@@ -20,14 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.R
 import com.synac.agecalculator.presentation.settings.component.SettingsItemCard
 import com.synac.agecalculator.presentation.util.AppTheme
+import com.synac.agecalculator.presentation.util.Constants
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,15 +39,17 @@ fun SettingsScreenRoot(
 ) {
     val viewModel = koinViewModel<SettingsViewModel>()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val uriHandler = LocalUriHandler.current
 
     SettingsScreen(
         state = state,
         onAction = { action ->
             when (action) {
                 SettingAction.PrivacyPolicyClick -> {
-                    val privacyPolicy =
-                        "https://synac-apps.github.io/age-calculator-privacy-policy/"
-                    navigateToPrivacyPolicy(privacyPolicy)
+                    navigateToPrivacyPolicy(Constants.PRIVACY_POLICY_LINK)
+                }
+                SettingAction.GithubLinkClick -> {
+                    uriHandler.openUri(Constants.GITHUB_LINK)
                 }
                 SettingAction.AppVersionClick -> onAppVersionClick()
                 SettingAction.OnBackClick -> navigateUp()
@@ -56,6 +59,7 @@ fun SettingsScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
     state: SettingsUiState,
@@ -64,8 +68,18 @@ private fun SettingsScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        SettingsTopBar(
-            onBackClick = { onAction(SettingAction.OnBackClick) }
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                IconButton(
+                    onClick = { onAction(SettingAction.OnBackClick) }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
         )
         ThemeSettingsItem(
             modifier = Modifier.padding(horizontal = 12.dp),
@@ -87,9 +101,21 @@ private fun SettingsScreen(
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "App Version",
-            iconResId = R.drawable.ic_launcher_foreground,
+            iconResId = R.drawable.ic_code_filled,
             onClick = { onAction(SettingAction.AppVersionClick) },
-            trailingContent = { Text(text = state.appVersion) }
+            trailingContent = {
+                Text(
+                    text = state.appVersion,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+            }
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        SettingsItemCard(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            title = "Project On Github",
+            iconResId = R.drawable.ic_github,
+            onClick = { onAction(SettingAction.GithubLinkClick) }
         )
         Spacer(modifier = Modifier.height(12.dp))
         SettingsItemCard(
@@ -99,31 +125,6 @@ private fun SettingsScreen(
             onClick = { onAction(SettingAction.PrivacyPolicyClick) }
         )
     }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun SettingsTopBar(
-    onBackClick: () -> Unit
-) {
-    TopAppBar(
-        title = {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-        }
-    )
 }
 
 @Composable
