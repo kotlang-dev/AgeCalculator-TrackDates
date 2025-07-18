@@ -98,6 +98,8 @@ class CalculatorViewModel(
             CalculatorAction.DeleteOccasion -> {
                 deleteOccasion()
             }
+
+            CalculatorAction.NavigateUp -> {}
         }
     }
 

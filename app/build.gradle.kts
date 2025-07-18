@@ -15,8 +15,8 @@ android {
         applicationId = "com.synac.agecalculator"
         minSdk = 21
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.4"
+        versionCode = 6
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.app.update.ktx)
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.navigation)

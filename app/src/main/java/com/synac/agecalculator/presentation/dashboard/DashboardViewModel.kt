@@ -17,7 +17,7 @@ class DashboardViewModel(
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState = combine(
         _uiState,
-        repository.getAllOccasions()
+        repository.observeOccasions()
     ) { state, occasions ->
         state.copy(occasions = occasions)
     }.stateIn(
@@ -45,6 +45,9 @@ class DashboardViewModel(
                 _uiState.update { it.copy(isDatePickerDialogOpen = false) }
                 updateOccasion(action.millis)
             }
+
+            is DashboardAction.NavigateToCalculatorScreen -> {}
+            DashboardAction.NavigateToSettingsScreen -> {}
         }
     }
 
