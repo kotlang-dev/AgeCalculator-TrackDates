@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy – Age Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: transparent;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 24px;
+        }
+
+        /* --- Light Mode Styles (Default) --- */
+        body {
+            color: #212121;
+        }
+        h1 {
+            color: #5a3ec8;
+            border-bottom: 2px solid #eee;
+        }
+        h2 {
+            color: #4a4a4a;
+        }
+        a {
+            color: #5a3ec8;
+        }
+
+        /* --- Dark Mode Styles (Applied when body has .dark-mode class) --- */
+        body.dark-mode {
+            color: #E0E0E0;
+        }
+        body.dark-mode h1 {
+            color: #9D85E3;
+            border-bottom-color: #424242;
+        }
+        body.dark-mode h2 {
+            color: #CCCCCC;
+        }
+        body.dark-mode a {
+            color: #9D85E3;
+        }
+
+        /* --- General Styling --- */
+        h1, h2, p, a { transition: color 0.3s ease; }
+        h1 { font-size: 1.8rem; padding-bottom: 0.5em; margin-top: 0; }
+        h2 { margin-top: 2em; font-size: 1.2rem; }
+        .updated { font-size: 0.9rem; color: #888; margin-bottom: 2em; }
+        p { font-size: 1rem; }
+        a { font-weight: 700; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last Updated: July 18, 2025</p>
+
+    <p>
+        <strong>Age Calculator – Track Dates</strong> ("the App"), developed by <strong>Mohammad Arif</strong>, is committed to protecting your privacy. This policy outlines our practices concerning data.
+    </p>
+
+    <h2>1. Data Collection & Usage</h2>
+    <p>
+        The App is designed to function entirely offline. We do not collect, store, transmit, or share any personal data from our users. All information you enter, such as dates and occasion names, is stored exclusively in a local database on your device.
+    </p>
+
+    <h2>2. Third-Party Services</h2>
+    <p>
+        The App does not integrate with any third-party services, including analytics, advertising networks, or cloud storage providers. Your data is never shared with any external entity.
+    </p>
+
+    <h2>3. Data Deletion</h2>
+    <p>
+        Since all data is stored locally, it is permanently deleted from your device if you choose to uninstall the App.
+    </p>
+
+    <h2>4. Children's Privacy</h2>
+    <p>
+        We do not knowingly collect any information from users, including children under the age of 13. The App's functionality is self-contained on the user's device.
+    </p>
+
+    <h2>5. Changes to This Policy</h2>
+    <p>
+        We may update this Privacy Policy from time to time. Any changes will be reflected on this page. We encourage you to review this policy periodically.
+    </p>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, please feel free to contact us.</p>
+    <p>
+        Email: <a href="mailto:ursmohammadarif@gmail.com">ursmohammadarif@gmail.com</a><br>
+        YouTube: <a href="https://www.youtube.com/@kotlang" target="_blank">Mohammad Arif</a>
+    </p>
+    <script>
+        // This script runs immediately when the page loads.
+        // It checks the URL for a 'theme' parameter.
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('theme') === 'dark') {
+            // If the theme is dark, it adds the 'dark-mode' class to the body.
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>
