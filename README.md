@@ -25,9 +25,8 @@ This project showcases modern Android development best practices, including a cl
 
 ## 📸 Screenshots
 
-| Dashboard | Calculator | Settings |
-| :---: | :---: | :---: |
-| <img src="URL_TO_YOUR_DASHBOARD_SCREENSHOT" width="250"> | <img src="URL_TO_YOUR_CALCULATOR_SCREENSHOT" width="250"> | <img src="URL_TO_YOUR_SETTINGS_SCREENSHOT" width="250"> |
+| <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot1.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot2.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot3.jpeg?raw=true" width="250"> |
+| :--- | :--- | :--- |
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -46,7 +45,7 @@ This project follows the principles of **Clean Architecture**, separating concer
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License.
 
 ---
 
