@@ -28,19 +28,6 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    single<OccasionDatabase> {
-        Room
-            .databaseBuilder(
-                context = androidApplication(),
-                klass = OccasionDatabase::class.java,
-                name = "occasion_database"
-            )
-            .build()
-    }
-    single<OccasionDao> { get<OccasionDatabase>().occasionDao }
-
-    singleOf(::OccasionRepositoryImpl).bind<OccasionRepository>()
-
     //DataStore
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create {

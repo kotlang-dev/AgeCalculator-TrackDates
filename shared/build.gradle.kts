@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
 //    alias(libs.plugins.composeHotReload)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -38,6 +40,15 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            //Room
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
+
+            //Koin
+            implementation(project.dependencies.platform(libs.koin.bom))
+            api(libs.koin.core)
+            implementation(libs.bundles.koin.kmp)
         }
 
         commonTest.dependencies {
@@ -45,9 +56,7 @@ kotlin {
         }
 
         androidMain.dependencies {
-            // Add Android-specific dependencies here. Note that this source set depends on
-            // commonMain by default and will correctly pull the Android artifacts of any KMP
-            // dependencies declared in commonMain.
+            implementation(libs.koin.android)
         }
 
         desktopMain.dependencies {
@@ -71,10 +80,6 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-
 compose.desktop {
     application {
         mainClass = "com.synac.agecalculator.MainKt"
@@ -85,4 +90,14 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+
+dependencies {
+    debugImplementation(compose.uiTooling)
+    ksp(libs.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
