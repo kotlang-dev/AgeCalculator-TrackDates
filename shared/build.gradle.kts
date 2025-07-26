@@ -1,0 +1,88 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.multiplatform)
+//    alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.composeMultiplatform)
+}
+
+kotlin {
+
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+    jvm("desktop")
+
+    // Source set declarations.
+    // Declaring a target automatically creates a source set with the same name. By default, the
+    // Kotlin Gradle Plugin creates additional source sets that depend on each other, since it is
+    // common to share sources between related targets.
+    // See: https://kotlinlang.org/docs/multiplatform-hierarchy.html
+    sourceSets {
+        val desktopMain by getting
+
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+
+        androidMain.dependencies {
+            // Add Android-specific dependencies here. Note that this source set depends on
+            // commonMain by default and will correctly pull the Android artifacts of any KMP
+            // dependencies declared in commonMain.
+        }
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
+        }
+    }
+}
+
+android {
+    namespace = "com.synac.agecalculator.shared"
+    compileSdk = 35
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.synac.agecalculator.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.synac.agecalculator"
+            packageVersion = "1.0.0"
+        }
+    }
+}
