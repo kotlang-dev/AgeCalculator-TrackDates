@@ -45,6 +45,9 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
 
+            //Datastore
+            implementation(libs.androidx.datastore.preferences)
+
             //Koin
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)

@@ -2,7 +2,7 @@ package com.synac.agecalculator.data.local
 
 import java.io.File
 
-fun getDatabaseFile(): File {
+fun getDesktopFile(fileName: String): File {
     val userHome = System.getProperty("user.home")
 
     val appDataDir = when {
@@ -21,5 +21,5 @@ fun getDatabaseFile(): File {
         appDataDir.mkdirs()
     }
 
-    return File(appDataDir, "occasions.db")
+    return File(appDataDir, fileName)
 }

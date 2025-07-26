@@ -5,7 +5,9 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.synac.agecalculator.data.local.OccasionDao
 import com.synac.agecalculator.data.local.OccasionDatabase
 import com.synac.agecalculator.data.repository.OccasionRepositoryImpl
+import com.synac.agecalculator.data.repository.PreferenceRepositoryImpl
 import com.synac.agecalculator.domain.repository.OccasionRepository
+import com.synac.agecalculator.domain.repository.PreferenceRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -20,5 +22,7 @@ val sharedModule = module {
     single<OccasionDao> { get<OccasionDatabase>().occasionDao }
 
     singleOf(::OccasionRepositoryImpl).bind<OccasionRepository>()
+
+    singleOf(::PreferenceRepositoryImpl) bind PreferenceRepository::class
 
 }
