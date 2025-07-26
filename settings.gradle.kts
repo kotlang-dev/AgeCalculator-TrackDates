@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Age Calculator"
-include(":app")
- 
+include(":androidApp")
