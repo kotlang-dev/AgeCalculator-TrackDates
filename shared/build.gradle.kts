@@ -42,7 +42,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose.kmp)
 
             //Compose
-            implementation(libs.navigation.compose)
+            implementation(libs.navigation.compose.kmp)
 
             //Room
             implementation(libs.room.runtime)

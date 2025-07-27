@@ -10,6 +10,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.06.00"
 datetime = "0.6.1"
 navigationCompose = "2.9.0"
+navigationComposeKmp = "2.9.0-beta04"
 kotlinxSerializationJson = "1.7.3"
 room = "2.7.2"
 sqlite = "2.5.2"
@@ -54,6 +55,7 @@ kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-s
 androidx-lifecycle-viewmodel-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-compose-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
+navigation-compose-kmp = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationComposeKmp" }
 
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

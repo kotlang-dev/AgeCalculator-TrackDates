@@ -10,6 +10,7 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.synac.agecalculator.data.local.OccasionDatabase
 import com.synac.agecalculator.data.repository.AndroidAppUpdateRepository
+import com.synac.agecalculator.data.util.Constants
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
@@ -27,7 +28,7 @@ actual val platformModule = module {
     }
     single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create {
-            androidContext().preferencesDataStoreFile(Constants.DATASTORE_NAME)
+            androidContext().preferencesDataStoreFile(Constants.LEGACY_DATASTORE_NAME)
         }
     }
 
