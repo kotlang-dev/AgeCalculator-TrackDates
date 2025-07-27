@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.synac.agecalculator.presentation.calculator.AgeStats
 import com.synac.agecalculator.presentation.theme.spacing
 import java.text.NumberFormat
@@ -77,7 +76,7 @@ private fun TotalTimeRow(
     }
 }
 
-@Preview
+//@Preview
 @Composable
 private fun PreviewStatisticsCard() {
     StatisticsCard(

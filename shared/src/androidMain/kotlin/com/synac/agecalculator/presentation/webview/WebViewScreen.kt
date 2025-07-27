@@ -30,7 +30,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WebViewScreen(
+actual fun WebViewScreen(
     url: String,
     onNavigateBack: () -> Unit
 ) {

@@ -3,6 +3,7 @@ package com.synac.agecalculator.presentation.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -19,6 +20,7 @@ import com.synac.agecalculator.presentation.webview.WebViewScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     onAppVersionClick: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -42,6 +44,7 @@ fun NavGraph(
             exitTransition = { slideOutTransition() },
         ) {
             CalculatorScreenRoot(
+                snackbarHostState = snackbarHostState,
                 navigateUp = navController::navigateUp
             )
         }

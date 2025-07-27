@@ -26,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,9 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.component.AgeBoxSection
@@ -49,24 +49,27 @@ import com.synac.agecalculator.presentation.component.StatisticsCard
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
-import com.synac.agecalculator.presentation.util.showToast
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CalculatorScreenRoot(
+    snackbarHostState: SnackbarHostState,
     navigateUp: () -> Unit
 ) {
 
     val viewModel: CalculatorViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
-
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
-                is CalculatorEvent.ShowToast -> showToast(context, event.message)
+                is CalculatorEvent.ShowToast -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
                 CalculatorEvent.NavigateToDashboardScreen -> navigateUp()
             }
         }
@@ -290,7 +293,7 @@ private fun DateSection(
     }
 }
 
-@PreviewScreenSizes
+//@PreviewScreenSizes
 @Composable
 private fun PreviewCalculatorScreen() {
     AgeCalculatorTheme {

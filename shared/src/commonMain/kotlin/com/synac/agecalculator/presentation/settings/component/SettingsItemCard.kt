@@ -1,6 +1,5 @@
 package com.synac.agecalculator.presentation.settings.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -16,14 +15,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SettingsItemCard(
     modifier: Modifier = Modifier,
-    @DrawableRes iconResId: Int,
+    iconResId: DrawableResource,
     title: String,
     hPadding: Dp = 12.dp,
     vPadding: Dp = 14.dp,
@@ -42,7 +42,7 @@ fun SettingsItemCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = iconResId),
+                painter = painterResource(iconResId),
                 contentDescription = title,
                 modifier = Modifier.size(24.dp)
             )

@@ -1,5 +1,13 @@
 package com.synac.agecalculator.presentation.settings
 
+import agecalculator.shared.generated.resources.Res
+import agecalculator.shared.generated.resources.ic_code_filled
+import agecalculator.shared.generated.resources.ic_dark_mode
+import agecalculator.shared.generated.resources.ic_github
+import agecalculator.shared.generated.resources.ic_light_mode
+import agecalculator.shared.generated.resources.ic_paint_roller_filled
+import agecalculator.shared.generated.resources.ic_privacy_tip_filled
+import agecalculator.shared.generated.resources.ic_theme_auto
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,15 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.synac.agecalculator.R
 import com.synac.agecalculator.presentation.settings.component.SettingsItemCard
 import com.synac.agecalculator.presentation.util.AppTheme
 import com.synac.agecalculator.presentation.util.Constants
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingsScreenRoot(
@@ -37,7 +43,7 @@ fun SettingsScreenRoot(
     navigateUp: () -> Unit,
     onAppVersionClick: () -> Unit
 ) {
-    val viewModel = koinViewModel<SettingsViewModel>()
+    val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
 
@@ -101,7 +107,7 @@ private fun SettingsScreen(
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "App Version",
-            iconResId = R.drawable.ic_code_filled,
+            iconResId = Res.drawable.ic_code_filled,
             onClick = { onAction(SettingAction.AppVersionClick) },
             trailingContent = {
                 Text(
@@ -114,14 +120,14 @@ private fun SettingsScreen(
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "Project On Github",
-            iconResId = R.drawable.ic_github,
+            iconResId = Res.drawable.ic_github,
             onClick = { onAction(SettingAction.GithubLinkClick) }
         )
         Spacer(modifier = Modifier.height(12.dp))
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "Privacy Policy",
-            iconResId = R.drawable.ic_privacy_tip_filled,
+            iconResId = Res.drawable.ic_privacy_tip_filled,
             onClick = { onAction(SettingAction.PrivacyPolicyClick) }
         )
     }
@@ -142,15 +148,15 @@ private fun ThemeSettingsItem(
     }
     val themeIconResId = remember(theme) {
         when (theme) {
-            AppTheme.LIGHT -> R.drawable.ic_light_mode
-            AppTheme.DARK -> R.drawable.ic_dark_mode
-            else -> R.drawable.ic_theme_auto
+            AppTheme.LIGHT -> Res.drawable.ic_light_mode
+            AppTheme.DARK -> Res.drawable.ic_dark_mode
+            else -> Res.drawable.ic_theme_auto
         }
     }
 
     SettingsItemCard(
         modifier = modifier,
-        iconResId = R.drawable.ic_paint_roller_filled,
+        iconResId = Res.drawable.ic_paint_roller_filled,
         title = "App Theme",
         onClick = onClick
     ) {
@@ -161,9 +167,9 @@ private fun ThemeSettingsItem(
             )
         }
         Spacer(modifier = Modifier.width(6.dp))
-        AnimatedContent(themeIconResId, label = "themePainter") { icon ->
+        AnimatedContent(themeIconResId, label = "themePainter") { iconResource ->
             Icon(
-                painter = painterResource(icon),
+                painter = painterResource(iconResource),
                 contentDescription = themeText,
                 modifier = Modifier.size(24.dp)
             )
@@ -171,7 +177,7 @@ private fun ThemeSettingsItem(
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 private fun PreviewSettingsScreen() {
     SettingsScreen(

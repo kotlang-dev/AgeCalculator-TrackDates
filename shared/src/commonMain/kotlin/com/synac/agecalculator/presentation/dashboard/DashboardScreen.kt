@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,7 +43,7 @@ import com.synac.agecalculator.presentation.component.StylizedAgeText
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.periodUntil
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DashboardScreenRoot(
@@ -199,7 +198,7 @@ private fun OccasionCard(
     }
 }
 
-@PreviewScreenSizes
+//@PreviewScreenSizes
 @Composable
 private fun PreviewDashboardScreen() {
     val dummyOccasions = List(20) {
