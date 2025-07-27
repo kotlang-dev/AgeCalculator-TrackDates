@@ -1,4 +1,7 @@
 [versions]
+android-compileSdk = "35"
+android-minSdk = "21"
+android-targetSdk = "35"
 agp = "8.10.1"
 kotlin = "2.1.20"
 coreKtx = "1.16.0"
@@ -9,14 +12,12 @@ lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2025.06.00"
 datetime = "0.6.1"
-navigationCompose = "2.9.0"
 navigationComposeKmp = "2.9.0-beta04"
 kotlinxSerializationJson = "1.7.3"
 room = "2.7.2"
 sqlite = "2.5.2"
 ksp = "2.1.20-2.0.1"
 koin = "4.0.3"
-uiTextGoogleFonts = "1.8.2"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.7"
 appUpdateKtx = "2.1.0"
@@ -46,9 +47,7 @@ app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.re
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime"}
-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
-androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
@@ -57,7 +56,6 @@ androidx-lifecycle-viewmodel-compose-kmp = { group = "org.jetbrains.androidx.lif
 androidx-lifecycle-runtime-compose-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 navigation-compose-kmp = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationComposeKmp" }
 
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
@@ -72,7 +70,6 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel"}
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation"}
 koin-android = { module = "io.insert-koin:koin-android"}
 
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
