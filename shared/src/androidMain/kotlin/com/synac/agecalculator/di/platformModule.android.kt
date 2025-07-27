@@ -6,8 +6,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.synac.agecalculator.data.local.OccasionDatabase
+import com.synac.agecalculator.data.repository.AndroidAppUpdateRepository
+import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val platformModule = module {
@@ -24,5 +30,8 @@ actual val platformModule = module {
             androidContext().preferencesDataStoreFile(Constants.DATASTORE_NAME)
         }
     }
+
+    single<AppUpdateManager> { AppUpdateManagerFactory.create(androidContext()) }
+    singleOf(::AndroidAppUpdateRepository) bind AppUpdateRepository::class
 
 }

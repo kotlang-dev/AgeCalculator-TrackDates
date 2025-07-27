@@ -2,7 +2,7 @@ package com.synac.agecalculator.di
 
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.synac.agecalculator.data.repository.AppUpdateRepositoryImpl
+import com.synac.agecalculator.data.repository.AndroidAppUpdateRepository
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
 import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
@@ -15,9 +15,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
-
-    single<AppUpdateManager> { AppUpdateManagerFactory.create(androidContext()) }
-    singleOf(::AppUpdateRepositoryImpl) bind AppUpdateRepository::class
 
     viewModelOf(::CalculatorViewModel)
     viewModelOf(::DashboardViewModel)

@@ -4,13 +4,13 @@ import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.synac.agecalculator.domain.model.AppUpdateStatus
 import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import com.google.android.play.core.install.model.UpdateAvailability as AppUpdateAvailability
 
-class AppUpdateRepositoryImpl(
+class AndroidAppUpdateRepository(
     private val context: Context,
     private val appUpdateManager: AppUpdateManager
 ) : AppUpdateRepository {
@@ -48,7 +48,7 @@ class AppUpdateRepositoryImpl(
     }
 
     private fun isFlexibleUpdateAllowed(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updateAvailability() == AppUpdateAvailability.UPDATE_AVAILABLE &&
+        return appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
                 appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
     }
 

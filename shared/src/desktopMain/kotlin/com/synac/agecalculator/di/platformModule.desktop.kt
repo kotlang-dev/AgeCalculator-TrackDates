@@ -7,7 +7,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.synac.agecalculator.data.local.OccasionDatabase
 import com.synac.agecalculator.data.local.getDesktopFile
+import com.synac.agecalculator.data.repository.DesktopAppUpdateRepository
+import com.synac.agecalculator.domain.repository.AppUpdateRepository
 import okio.Path.Companion.toPath
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val platformModule = module {
@@ -22,5 +26,7 @@ actual val platformModule = module {
             getDesktopFile(Constants.DATASTORE_NAME).absolutePath.toPath()
         }
     }
+
+    singleOf(::DesktopAppUpdateRepository) bind AppUpdateRepository::class
 
 }
