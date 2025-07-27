@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -10,6 +11,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -38,8 +40,13 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            implementation(libs.androidx.lifecycle.viewmodel.kmp)
+            implementation(libs.androidx.lifecycle.viewmodel.compose.kmp)
+            implementation(libs.androidx.lifecycle.runtime.compose.kmp)
+
+            //Compose
+            implementation(libs.navigation.compose)
 
             //Room
             implementation(libs.room.runtime)
@@ -52,6 +59,10 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
             implementation(libs.bundles.koin.kmp)
+
+            //Kotlinx
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {

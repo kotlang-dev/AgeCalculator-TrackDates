@@ -1,7 +1,6 @@
 package com.synac.agecalculator.presentation
 
 import android.app.Application
-import com.synac.agecalculator.di.appModule
 import com.synac.agecalculator.di.platformModule
 import com.synac.agecalculator.di.sharedModule
 import org.koin.android.ext.koin.androidContext
@@ -15,7 +14,7 @@ class AgeCalculatorApp: Application() {
         startKoin {
             androidLogger()
             androidContext(this@AgeCalculatorApp)
-            modules(appModule, sharedModule, platformModule)
+            modules(sharedModule, platformModule)
         }
     }
 }
