@@ -1,4 +1,4 @@
-package com.synac.agecalculator.presentation
+package com.synac.agecalculator
 
 import android.app.Application
 import com.synac.agecalculator.di.initKoin

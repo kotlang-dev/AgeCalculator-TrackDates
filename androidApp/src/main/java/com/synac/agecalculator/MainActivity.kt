@@ -1,4 +1,4 @@
-package com.synac.agecalculator.presentation.main
+package com.synac.agecalculator
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,8 +13,9 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.synac.agecalculator.App
-import com.synac.agecalculator.presentation.util.Constants.APP_UPDATE_REQUEST_CODE
+import com.synac.agecalculator.presentation.main.MainAction
+import com.synac.agecalculator.presentation.main.MainViewModel
+import com.synac.agecalculator.presentation.util.Constants
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -52,11 +53,11 @@ class MainActivity : ComponentActivity() {
                 completeUpdate = { appUpdateManager.completeUpdate() },
                 enableEdgeToEdge = { isDarkMode ->
                     enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.auto(
+                        statusBarStyle = SystemBarStyle.Companion.auto(
                             Color.TRANSPARENT, Color.TRANSPARENT,
                             detectDarkMode = { isDarkMode }
                         ),
-                        navigationBarStyle = SystemBarStyle.auto(
+                        navigationBarStyle = SystemBarStyle.Companion.auto(
                             Color.TRANSPARENT, Color.TRANSPARENT,
                             detectDarkMode = { isDarkMode }
                         )
@@ -88,7 +89,7 @@ class MainActivity : ComponentActivity() {
                     appUpdateInfo,
                     this,
                     AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),
-                    APP_UPDATE_REQUEST_CODE
+                    Constants.APP_UPDATE_REQUEST_CODE
                 )
             }
         }
