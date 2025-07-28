@@ -21,6 +21,7 @@ import java.net.URI
 @Composable
 actual fun WebViewScreen(
     url: String,
+    inDarkMode: Boolean,
     onNavigateBack: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {

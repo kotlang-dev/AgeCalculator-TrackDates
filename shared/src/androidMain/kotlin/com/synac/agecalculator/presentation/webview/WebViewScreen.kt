@@ -8,7 +8,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,14 +31,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 actual fun WebViewScreen(
     url: String,
+    inDarkMode: Boolean,
     onNavigateBack: () -> Unit
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
     var isLoading by remember { mutableStateOf(true) }
-    val isDarkTheme = isSystemInDarkTheme()
 
-    val urlWithTheme = remember(url, isDarkTheme) {
-        if (isDarkTheme) "$url?theme=dark" else "$url?theme=light"
+    val urlWithTheme = remember(url, inDarkMode) {
+        if (inDarkMode) "$url?theme=dark" else "$url?theme=light"
     }
     BackHandler(enabled = webView?.canGoBack() == true) {
         webView?.goBack()

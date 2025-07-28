@@ -5,5 +5,6 @@ import androidx.compose.runtime.Composable
 @Composable
 expect fun WebViewScreen(
     url: String,
+    inDarkMode: Boolean,
     onNavigateBack: () -> Unit
 )
