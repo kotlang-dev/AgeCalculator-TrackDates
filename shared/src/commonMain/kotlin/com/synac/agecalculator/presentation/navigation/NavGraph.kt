@@ -21,6 +21,7 @@ import com.synac.agecalculator.presentation.webview.WebViewScreen
 fun NavGraph(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
+    isDarkMode: Boolean,
     onAppVersionClick: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -64,6 +65,7 @@ fun NavGraph(
             val args = backStackEntry.toRoute<Route.WebView>()
             WebViewScreen(
                 url = args.url.decodeUrl(),
+                inDarkMode = isDarkMode,
                 onNavigateBack = { navController.navigateUp() }
             )
         }

@@ -96,6 +96,7 @@ fun App(
                     .consumeWindowInsets(WindowInsets.systemBars)
                     .padding(innerPadding),
                 snackbarHostState = snackbarHostState,
+                isDarkMode = isDarkMode,
                 onAppVersionClick = {
                     if (!state.isUpdateDownloading) {
                         mainViewModel.onAction(MainAction.CheckForUpdate(manually = true))
