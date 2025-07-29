@@ -4,19 +4,20 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.synac.agecalculator.presentation.calculator.CalculatorScreenRoot
-import com.synac.agecalculator.presentation.dashboard.DashboardScreenRoot
+import com.synac.agecalculator.presentation.list_detail.ListDetailScreenRoot
 import com.synac.agecalculator.presentation.settings.SettingsScreenRoot
 import com.synac.agecalculator.presentation.util.decodeUrl
 import com.synac.agecalculator.presentation.util.encodeUrl
 import com.synac.agecalculator.presentation.webview.WebViewScreen
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
@@ -27,26 +28,15 @@ fun NavGraph(
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
-        startDestination = Route.DashboardScreen,
+        startDestination = Route.ListDetailScreen,
         navController = navController
     ) {
-        composable<Route.DashboardScreen> {
-            DashboardScreenRoot(
-                navigateToCalculatorScreen = { occasionId ->
-                    navController.navigate(Route.CalculatorScreen(occasionId))
-                },
+        composable<Route.ListDetailScreen> {
+            ListDetailScreenRoot(
+                snackbarHostState = snackbarHostState,
                 navigateToSettingsScreen = {
                     navController.navigate(Route.SettingsScreen)
                 }
-            )
-        }
-        composable<Route.CalculatorScreen>(
-            enterTransition = { slideInTransition() },
-            exitTransition = { slideOutTransition() },
-        ) {
-            CalculatorScreenRoot(
-                snackbarHostState = snackbarHostState,
-                navigateUp = navController::navigateUp
             )
         }
         composable<Route.SettingsScreen> {

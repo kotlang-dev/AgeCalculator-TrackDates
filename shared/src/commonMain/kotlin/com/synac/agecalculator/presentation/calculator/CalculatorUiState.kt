@@ -4,7 +4,7 @@ import kotlinx.datetime.DateTimePeriod
 
 data class CalculatorUiState(
     val emoji: String = "🎂",
-    val title: String = "Birthday",
+    val title: String = "",
     val fromDateMillis: Long? = null,
     val toDateMillis: Long? = null,
     val isEmojiDialogOpen: Boolean = false,

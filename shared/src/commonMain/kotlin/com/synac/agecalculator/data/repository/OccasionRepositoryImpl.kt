@@ -12,6 +12,10 @@ class OccasionRepositoryImpl(
     private val occasionDao: OccasionDao
 ) : OccasionRepository {
 
+    override suspend fun getOccasionCount(): Int {
+        return occasionDao.getOccasionCount()
+    }
+
     override suspend fun insertOccasion(occasion: Occasion): Int {
         val id = occasionDao.insertOccasion(occasion.toEntity())
         return id.toInt()
@@ -25,18 +29,7 @@ class OccasionRepositoryImpl(
         return occasionDao
             .observeOccasions()
             .map { occasionEntities ->
-                if (occasionEntities.isNotEmpty()) {
-                    occasionEntities.map { it.toDomain() }
-                } else {
-                    val default = Occasion(
-                        id = null,
-                        title = "Birthday",
-                        dateMillis = 0L,
-                        emoji = "🎂"
-                    )
-                    val id = occasionDao.insertOccasion(default.toEntity())
-                    listOf(default.copy(id = id.toInt()))
-                }
+                occasionEntities.map { it.toDomain() }
             }
     }
 

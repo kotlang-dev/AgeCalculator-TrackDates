@@ -26,6 +26,7 @@ core = "1.5.0"
 composeHotReload = "1.0.0-beta04"
 composeMultiplatform = "1.8.2"
 kotlinx-coroutines = "1.10.2"
+adaptiveLayout = "1.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,10 @@ androidx-lifecycle-viewmodel-kmp = { group = "org.jetbrains.androidx.lifecycle",
 androidx-lifecycle-viewmodel-compose-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-compose-kmp = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 navigation-compose-kmp = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationComposeKmp" }
+
+material3-adaptive-kmp = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptiveLayout" }
+material3-adaptive-layout-kmp = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptiveLayout" }
+material3-adaptive-navigation-kmp = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptiveLayout" }
 
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -92,4 +97,9 @@ koin-kmp = [
     "koin-compose",
     "koin-compose-viewmodel",
     "koin-compose-viewmodel-navigation"
+]
+adaptive-layout-kmp = [
+    "material3-adaptive-kmp",
+    "material3-adaptive-layout-kmp",
+    "material3-adaptive-navigation-kmp"
 ]

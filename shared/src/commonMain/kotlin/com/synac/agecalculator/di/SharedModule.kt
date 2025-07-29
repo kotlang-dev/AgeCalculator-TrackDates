@@ -8,8 +8,7 @@ import com.synac.agecalculator.data.repository.OccasionRepositoryImpl
 import com.synac.agecalculator.data.repository.PreferenceRepositoryImpl
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.repository.PreferenceRepository
-import com.synac.agecalculator.presentation.calculator.CalculatorViewModel
-import com.synac.agecalculator.presentation.dashboard.DashboardViewModel
+import com.synac.agecalculator.presentation.list_detail.ListDetailViewModel
 import com.synac.agecalculator.presentation.main.MainViewModel
 import com.synac.agecalculator.presentation.settings.SettingsViewModel
 import org.koin.core.module.dsl.singleOf
@@ -30,9 +29,7 @@ val sharedModule = module {
 
     singleOf(::PreferenceRepositoryImpl) bind PreferenceRepository::class
 
-    viewModelOf(::CalculatorViewModel)
-    viewModelOf(::DashboardViewModel)
+    viewModelOf(::ListDetailViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::MainViewModel)
-
 }

@@ -26,86 +26,46 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.EmojiPickerDialog
 import com.synac.agecalculator.presentation.component.StatisticsCard
+import com.synac.agecalculator.presentation.list_detail.ListDetailAction
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.compose.viewmodel.koinViewModel
-
-@Composable
-fun CalculatorScreenRoot(
-    snackbarHostState: SnackbarHostState,
-    navigateUp: () -> Unit
-) {
-
-    val viewModel: CalculatorViewModel = koinViewModel()
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.event.collect { event ->
-            when (event) {
-                is CalculatorEvent.ShowToast -> {
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        duration = SnackbarDuration.Short
-                    )
-                }
-                CalculatorEvent.NavigateToDashboardScreen -> navigateUp()
-            }
-        }
-    }
-
-    CalculatorScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is CalculatorAction.NavigateUp -> navigateUp()
-                else -> viewModel.onAction(action)
-            }
-        }
-    )
-}
-
 
 @Composable
 fun CalculatorScreen(
     state: CalculatorUiState,
-    onAction: (CalculatorAction) -> Unit,
+    onAction: (ListDetailAction) -> Unit,
 ) {
 
     EmojiPickerDialog(
         isOpen = state.isEmojiDialogOpen,
-        onDismissRequest = { onAction(CalculatorAction.DismissEmojiPicker) },
+        onDismissRequest = { onAction(ListDetailAction.DismissEmojiPicker) },
         onEmojiSelected = { selectedEmoji ->
-            onAction(CalculatorAction.EmojiSelected(selectedEmoji))
+            onAction(ListDetailAction.EmojiSelected(selectedEmoji))
         }
     )
 
     CustomDatePickerDialog(
         isOpen = state.isDatePickerDialogOpen,
-        onDismissRequest = { onAction(CalculatorAction.DismissDatePicker) },
+        onDismissRequest = { onAction(ListDetailAction.DismissDatePicker) },
         onConfirmButtonClick = { selectedDateMillis ->
-            onAction(CalculatorAction.DateSelected(selectedDateMillis))
+            onAction(ListDetailAction.DateSelected(selectedDateMillis))
         },
     )
 
@@ -115,8 +75,8 @@ fun CalculatorScreen(
     ) {
         CalculatorTopBar(
             isDeleteIconVisible = state.occasionId != null,
-            onBackClick = { onAction(CalculatorAction.NavigateUp) },
-            onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) }
+            onBackClick = { onAction(ListDetailAction.NavigateUp) },
+            onDeleteClick = { onAction(ListDetailAction.DeleteOccasion) }
         )
         FlowRow(
             modifier = Modifier
@@ -176,7 +136,7 @@ private fun CalculatorTopBar(
 private fun HeaderSection(
     modifier: Modifier = Modifier,
     state: CalculatorUiState,
-    onAction: (CalculatorAction) -> Unit
+    onAction: (ListDetailAction) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     Column(
@@ -191,7 +151,7 @@ private fun HeaderSection(
                     .size(65.dp)
                     .clip(CircleShape)
                     .border(1.dp, gradient, CircleShape)
-                    .clickable { onAction(CalculatorAction.ShowEmojiPicker) },
+                    .clickable { onAction(ListDetailAction.ShowEmojiPicker) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -205,7 +165,7 @@ private fun HeaderSection(
                     .fillMaxWidth()
                     .border(1.dp, gradient, MaterialTheme.shapes.medium),
                 value = state.title,
-                onValueChange = { onAction(CalculatorAction.SetTitle(it)) },
+                onValueChange = { onAction(ListDetailAction.SetTitle(it)) },
                 label = if (state.title.isEmpty()) {
                     { Text(text = "Title") }
                 } else null,
@@ -226,13 +186,13 @@ private fun HeaderSection(
         DateSection(
             title = "From",
             date = state.fromDateMillis.toFormattedDateString(),
-            onDateIconClick = { onAction(CalculatorAction.ShowDatePicker(DateField.FROM)) }
+            onDateIconClick = { onAction(ListDetailAction.ShowDatePicker(DateField.FROM)) }
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         DateSection(
             title = "To",
             date = state.toDateMillis.toFormattedDateString(),
-            onDateIconClick = { onAction(CalculatorAction.ShowDatePicker(DateField.TO)) }
+            onDateIconClick = { onAction(ListDetailAction.ShowDatePicker(DateField.TO)) }
         )
     }
 }

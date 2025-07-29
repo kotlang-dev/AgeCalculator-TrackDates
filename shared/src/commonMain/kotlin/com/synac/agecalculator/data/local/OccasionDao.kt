@@ -21,4 +21,7 @@ interface OccasionDao {
     @Query("SELECT * FROM occasions WHERE id = :occasionId")
     suspend fun getOccasionById(occasionId: Int): OccasionEntity?
 
+    @Query("SELECT COUNT(*) FROM occasions")
+    suspend fun getOccasionCount(): Int
+
 }

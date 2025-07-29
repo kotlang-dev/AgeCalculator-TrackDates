@@ -29,54 +29,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.domain.model.Occasion
+import com.synac.agecalculator.presentation.calculator.DateField
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.StylizedAgeText
+import com.synac.agecalculator.presentation.list_detail.ListDetailAction
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.periodUntil
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.compose.viewmodel.koinViewModel
-
-@Composable
-fun DashboardScreenRoot(
-    navigateToCalculatorScreen: (Int?) -> Unit,
-    navigateToSettingsScreen: () -> Unit,
-) {
-    val viewModel: DashboardViewModel = koinViewModel()
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-    DashboardScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is DashboardAction.NavigateToCalculatorScreen -> {
-                    navigateToCalculatorScreen(action.occasionId)
-                }
-                is DashboardAction.NavigateToSettingsScreen -> navigateToSettingsScreen()
-                else -> viewModel.onAction(action)
-            }
-        }
-    )
-}
 
 @Composable
 fun DashboardScreen(
     state: DashboardUiState,
-    onAction: (DashboardAction) -> Unit
+    onAction: (ListDetailAction) -> Unit
 ) {
 
     CustomDatePickerDialog(
         isOpen = state.isDatePickerDialogOpen,
-        onDismissRequest = { onAction(DashboardAction.DismissDatePicker) },
+        onDismissRequest = { onAction(ListDetailAction.DismissDatePicker) },
         onConfirmButtonClick = { selectedDateMillis ->
-            onAction(DashboardAction.DateSelected(selectedDateMillis))
+            onAction(ListDetailAction.DateSelected(selectedDateMillis))
         }
     )
 
@@ -84,8 +62,8 @@ fun DashboardScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         DashboardTopBar(
-            onAddIconClick = { onAction(DashboardAction.NavigateToCalculatorScreen(null)) },
-            onSettingsIconClick = { onAction(DashboardAction.NavigateToSettingsScreen) }
+            onAddIconClick = { onAction(ListDetailAction.AddNewOccasionClicked) },
+            onSettingsIconClick = { onAction(ListDetailAction.NavigateToSettingsScreen) }
         )
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 400.dp),
@@ -98,8 +76,10 @@ fun DashboardScreen(
                 OccasionCard(
                     modifier = Modifier.fillMaxWidth(),
                     occasion = occasion,
-                    onCalendarIconClick = { onAction(DashboardAction.ShowDatePicker(occasion)) },
-                    onClick = { onAction(DashboardAction.NavigateToCalculatorScreen(occasion.id)) }
+                    onCalendarIconClick = {
+                        onAction(ListDetailAction.ShowDatePicker(DateField.FROM))
+                    },
+                    onClick = { onAction(ListDetailAction.OccasionSelected(occasion.id)) }
                 )
             }
         }

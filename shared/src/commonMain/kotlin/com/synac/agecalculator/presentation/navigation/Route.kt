@@ -5,9 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface Route {
     @Serializable
-    data object DashboardScreen : Route
-    @Serializable
-    data class CalculatorScreen(val id: Int?) : Route
+    data object ListDetailScreen : Route
     @Serializable
     data object SettingsScreen : Route
     @Serializable

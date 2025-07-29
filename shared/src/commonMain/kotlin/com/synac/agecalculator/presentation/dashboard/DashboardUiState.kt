@@ -4,6 +4,5 @@ import com.synac.agecalculator.domain.model.Occasion
 
 data class DashboardUiState(
     val isDatePickerDialogOpen: Boolean = false,
-    val occasions: List<Occasion> = emptyList(),
-    val selectedOccasion: Occasion? = null
+    val occasions: List<Occasion> = emptyList()
 )

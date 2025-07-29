@@ -43,6 +43,7 @@ kotlin {
 
             //Compose
             implementation(libs.navigation.compose.kmp)
+            implementation(libs.bundles.adaptive.layout.kmp)
 
             //Room
             implementation(libs.room.runtime)
