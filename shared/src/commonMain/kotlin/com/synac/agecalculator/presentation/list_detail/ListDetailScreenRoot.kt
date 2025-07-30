@@ -42,13 +42,14 @@ fun ListDetailScreenRoot(
             }
         }
     }
-
+    val isDetailPaneVisible = paneNavigator.canNavigateBack()
     ListDetailPaneScaffold(
         directive = paneNavigator.scaffoldDirective,
         value = paneNavigator.scaffoldValue,
         listPane = {
             DashboardScreen(
                 state = state.dashboardState,
+                selectedOccasionId = state.selectedOccasion?.id,
                 onAction = { action ->
                     when (action) {
                         is ListDetailAction.OccasionSelected -> {
@@ -66,6 +67,8 @@ fun ListDetailScreenRoot(
         detailPane = {
             CalculatorScreen(
                 state = state.calculatorState,
+                isBackIconVisible = isDetailPaneVisible,
+                isDeleteIconVisible = state.selectedOccasion != null,
                 onAction = { action ->
                     when (action) {
                         is ListDetailAction.NavigateUp -> {

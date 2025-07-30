@@ -2,6 +2,7 @@ package com.synac.agecalculator.presentation.calculator
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -46,10 +47,13 @@ import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.toFormattedDateString
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CalculatorScreen(
     state: CalculatorUiState,
+    isBackIconVisible: Boolean,
+    isDeleteIconVisible: Boolean,
     onAction: (ListDetailAction) -> Unit,
 ) {
 
@@ -74,14 +78,16 @@ fun CalculatorScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CalculatorTopBar(
-            isDeleteIconVisible = state.occasionId != null,
+            isBackIconVisible = isBackIconVisible,
+            isDeleteIconVisible = isDeleteIconVisible,
             onBackClick = { onAction(ListDetailAction.NavigateUp) },
             onDeleteClick = { onAction(ListDetailAction.DeleteOccasion) }
         )
         FlowRow(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             HeaderSection(
                 modifier = Modifier
@@ -104,6 +110,7 @@ fun CalculatorScreen(
 @Composable
 private fun CalculatorTopBar(
     modifier: Modifier = Modifier,
+    isBackIconVisible: Boolean,
     isDeleteIconVisible: Boolean,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -111,11 +118,13 @@ private fun CalculatorTopBar(
     TopAppBar(
         modifier = modifier,
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Navigate Back"
-                )
+            if (isBackIconVisible) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate Back"
+                    )
+                }
             }
         },
         title = { },
@@ -194,18 +203,7 @@ private fun HeaderSection(
             date = state.toDateMillis.toFormattedDateString(),
             onDateIconClick = { onAction(ListDetailAction.ShowDatePicker(DateField.TO)) }
         )
-    }
-}
-
-@Composable
-private fun StatisticsSection(
-    modifier: Modifier = Modifier,
-    state: CalculatorUiState
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         AgeBoxSection(
             title = "Time Passed",
             values = listOf(
@@ -222,7 +220,18 @@ private fun StatisticsSection(
                 "DAYS" to state.upcomingPeriod.days
             )
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+    }
+}
+
+@Composable
+private fun StatisticsSection(
+    modifier: Modifier = Modifier,
+    state: CalculatorUiState
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         StatisticsCard(
             title = "Statistics",
             ageStats = state.ageStats
@@ -253,12 +262,14 @@ private fun DateSection(
     }
 }
 
-//@PreviewScreenSizes
+@Preview
 @Composable
 private fun PreviewCalculatorScreen() {
     AgeCalculatorTheme {
         CalculatorScreen(
             state = CalculatorUiState(),
+            isBackIconVisible = true,
+            isDeleteIconVisible = true,
             onAction = {}
         )
     }

@@ -1,5 +1,6 @@
 package com.synac.agecalculator.presentation.dashboard
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -40,6 +42,8 @@ import com.synac.agecalculator.presentation.calculator.DateField
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.StylizedAgeText
 import com.synac.agecalculator.presentation.list_detail.ListDetailAction
+import com.synac.agecalculator.presentation.theme.gradient
+import com.synac.agecalculator.presentation.theme.greenTextColor
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.periodUntil
 import com.synac.agecalculator.presentation.util.toFormattedDateString
@@ -47,6 +51,7 @@ import com.synac.agecalculator.presentation.util.toFormattedDateString
 @Composable
 fun DashboardScreen(
     state: DashboardUiState,
+    selectedOccasionId: Int?,
     onAction: (ListDetailAction) -> Unit
 ) {
 
@@ -76,6 +81,7 @@ fun DashboardScreen(
                 OccasionCard(
                     modifier = Modifier.fillMaxWidth(),
                     occasion = occasion,
+                    isCardSelected = occasion.id == selectedOccasionId,
                     onCalendarIconClick = {
                         onAction(ListDetailAction.ShowDatePicker(DateField.FROM))
                     },
@@ -117,12 +123,22 @@ private fun DashboardTopBar(
 private fun OccasionCard(
     modifier: Modifier = Modifier,
     occasion: Occasion,
+    isCardSelected: Boolean,
     onCalendarIconClick: () -> Unit,
     onClick: () -> Unit
 ) {
     val dateMillis = occasion.dateMillis
-    Card(
-        modifier = modifier.clickable { onClick() }
+    val buttonContainerColor = if (isCardSelected) {
+        MaterialTheme.colorScheme.greenTextColor
+    } else MaterialTheme.colorScheme.surface
+    val buttonContentColor = if (isCardSelected) {
+        MaterialTheme.colorScheme.surface
+    } else MaterialTheme.colorScheme.onSurface
+
+    ElevatedCard(
+        modifier = modifier
+            .clickable { onClick() }
+            .border(1.dp, gradient, MaterialTheme.shapes.medium)
     ) {
         Row(
             modifier = Modifier
@@ -165,8 +181,8 @@ private fun OccasionCard(
                 .align(Alignment.End)
                 .size(25.dp),
             colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = buttonContainerColor,
+                contentColor = buttonContentColor
             )
         ) {
             Icon(
@@ -186,6 +202,7 @@ private fun PreviewDashboardScreen() {
     }
     DashboardScreen(
         state = DashboardUiState(occasions = dummyOccasions),
+        selectedOccasionId = 1,
         onAction = {}
     )
 }
