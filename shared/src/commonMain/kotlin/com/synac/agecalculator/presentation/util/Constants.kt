@@ -6,6 +6,6 @@ object Constants {
     const val PROMPT_COOLDOWN_MILLIS = 7 * 24 * 60 * 60 * 1000L // 7 days
 
     //Links
-    const val PRIVACY_POLICY_LINK = "https://kotlang-dev.github.io/AgeCalculator-TrackDates/"
-    const val GITHUB_LINK = "https://github.com/kotlang-dev/AgeCalculator-TrackDates"
+    const val PRIVACY_POLICY_LINK = "https://kotlang-dev.github.io/AgeCalculator-TrackDates/privacy.html"
+    const val ABOUT_LINK = "https://kotlang-dev.github.io/AgeCalculator-TrackDates/about.html"
 }
