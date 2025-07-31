@@ -1,0 +1,158 @@
+body {
+    background-color: transparent;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.7;
+    margin: 0;
+    padding: 24px;
+}
+
+/* --- Light Mode Styles (Default) --- */
+body {
+    color: #212121;
+}
+
+h1 {
+    color: #4a4a4a;
+}
+
+h2 {
+    color: #4a4a4a;
+}
+
+a {
+    color: #5a3ec8;
+}
+
+/* --- Dark Mode Styles (Applied when body has .dark-mode class) --- */
+body.dark-mode {
+    color: #E0E0E0;
+}
+
+body.dark-mode h1 {
+    color: #CCCCCC;
+}
+
+body.dark-mode h2 {
+    color: #CCCCCC;
+}
+
+body.dark-mode a {
+    color: #9D85E3;
+}
+
+body.dark-mode .button {
+    background-color: #3A2D6D;
+    color: #E0E0E0;
+}
+
+body.dark-mode .button:hover {
+    background-color: #4C3C8B;
+}
+
+/* --- General Styling --- */
+h1,
+h2,
+p,
+a {
+    transition: color 0.3s ease;
+}
+
+p, .privacy-title, .privacy-section-title {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+p { font-size: 1.1rem; }
+
+a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Privacy Page Specific --- */
+.privacy-title {
+    font-size: 2.2rem;
+    padding-bottom: 0.5em;
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+}
+
+body.dark-mode .privacy-title {
+    border-bottom-color: #424242;
+}
+
+.updated {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 2em;
+}
+
+.privacy-section-title {
+    margin-top: 2em;
+    font-size: 1.2rem;
+}
+
+/* --- About Page Specific --- */
+.about-body {
+    text-align: center;
+}
+
+.app-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+.thanks {
+    margin-top: 3em;
+}
+
+.github-button {
+    display: inline-flex;
+    /* Use flexbox to align icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* Space between icon and text */
+    background-color: #f6f8fa;
+    /* GitHub's light grey */
+    color: #24292f;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid rgba(27, 31, 36, 0.15);
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 2.5em;
+    transition: all 0.2s ease-in-out;
+}
+
+.github-button:hover {
+    background-color: #f3f5f8;
+    border-color: rgba(27, 31, 36, 0.25);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.github-button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    /* The icon will match the button's text color */
+}
+
+/* --- Dark Mode Overrides for the Button --- */
+body.dark-mode .github-button {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border-color: #30363d;
+}
+
+body.dark-mode .github-button:hover {
+    background-color: #292e36;
+    border-color: #8b949e;
+}
