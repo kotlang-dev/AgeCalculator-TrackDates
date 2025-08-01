@@ -6,11 +6,10 @@ import com.synac.agecalculator.domain.model.CalculationResult
 import com.synac.agecalculator.domain.model.Occasion
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.usecase.CalculateStatsUseCase
+import com.synac.agecalculator.domain.usecase.SaveOccasionUseCase
 import com.synac.agecalculator.presentation.calculator.CalculatorUiState
 import com.synac.agecalculator.presentation.calculator.DateField
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,8 @@ import kotlinx.coroutines.launch
 
 class ListDetailViewModel(
     private val repository: OccasionRepository,
-    private val calculateStatsUseCase: CalculateStatsUseCase
+    private val calculateStatsUseCase: CalculateStatsUseCase,
+    private val saveOccasionUseCase: SaveOccasionUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ListDetailUiState())
@@ -29,13 +29,7 @@ class ListDetailViewModel(
     init {
         viewModelScope.launch {
             if (repository.getOccasionCount() == 0) {
-                val default = Occasion(
-                    id = null,
-                    title = "Birthday",
-                    dateMillis = System.currentTimeMillis(),
-                    emoji = "🎂"
-                )
-                repository.insertOccasion(default)
+                insertDefaultOccasion()
             }
 
             repository.observeOccasions().collect { occasions ->
@@ -67,8 +61,6 @@ class ListDetailViewModel(
     private val _event = Channel<ListDetailEvent>()
     val event = _event.receiveAsFlow()
 
-    private var saveJob: Job? = null
-
     fun onAction(action: ListDetailAction) {
         when (action) {
             is ListDetailAction.SetTitle -> handleSetTitle(action.title)
@@ -93,7 +85,7 @@ class ListDetailViewModel(
                 calculatorState = it.calculatorState.copy(title = title)
             )
         }
-        saveOccasion()
+        triggerSave()
     }
 
     private fun handleSetEmoji(emoji: String) {
@@ -105,7 +97,7 @@ class ListDetailViewModel(
                 )
             )
         }
-        saveOccasion()
+        triggerSave()
     }
 
     private fun handleShowEmojiPicker() {
@@ -192,30 +184,43 @@ class ListDetailViewModel(
             )
         }
         if (activeField == DateField.FROM) {
-            saveOccasion()
+            triggerSave()
         }
     }
 
-    private fun saveOccasion() {
-        saveJob?.cancel()
-        saveJob = viewModelScope.launch {
-            delay(500) // Debounce save operations
-            val currentCalculatorState = uiState.value.calculatorState
-            val currentId = uiState.value.selectedOccasion?.id
+    private fun triggerSave() {
+        val currentCalculatorState = uiState.value.calculatorState
+        val currentId = uiState.value.selectedOccasion?.id
 
-            val occasionToSave = Occasion(
-                id = currentId,
-                dateMillis = currentCalculatorState.fromDateMillis,
-                emoji = currentCalculatorState.emoji,
-                title = currentCalculatorState.title
-            )
-            val savedId = repository.insertOccasion(occasionToSave)
+        val occasionToSave = Occasion(
+            id = currentId,
+            dateMillis = currentCalculatorState.fromDateMillis,
+            emoji = currentCalculatorState.emoji,
+            title = currentCalculatorState.title,
+            lastModified = System.currentTimeMillis()
+        )
+
+        saveOccasionUseCase(
+            scope = viewModelScope,
+            occasion = occasionToSave
+        ) { savedId ->
             if (currentId == null) {
                 _uiState.update {
                     it.copy(selectedOccasion = occasionToSave.copy(id = savedId))
                 }
             }
         }
+    }
+
+    private suspend fun insertDefaultOccasion() {
+        val default = Occasion(
+            id = null,
+            title = "Birthday",
+            dateMillis = System.currentTimeMillis(),
+            emoji = "🎂",
+            lastModified = System.currentTimeMillis()
+        )
+        repository.insertOccasion(default)
     }
 
     private fun deleteOccasion(isSinglePane: Boolean) {

@@ -9,6 +9,7 @@ import com.synac.agecalculator.data.repository.PreferenceRepositoryImpl
 import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.repository.PreferenceRepository
 import com.synac.agecalculator.domain.usecase.CalculateStatsUseCase
+import com.synac.agecalculator.domain.usecase.SaveOccasionUseCase
 import com.synac.agecalculator.presentation.list_detail.ListDetailViewModel
 import com.synac.agecalculator.presentation.main.MainViewModel
 import com.synac.agecalculator.presentation.settings.SettingsViewModel
@@ -32,6 +33,7 @@ val sharedModule = module {
     singleOf(::PreferenceRepositoryImpl) bind PreferenceRepository::class
 
     factoryOf(::CalculateStatsUseCase)
+    factoryOf(::SaveOccasionUseCase)
 
     viewModelOf(::ListDetailViewModel)
     viewModelOf(::SettingsViewModel)

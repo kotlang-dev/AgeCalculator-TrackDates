@@ -7,12 +7,14 @@ fun OccasionEntity.toDomain() = Occasion(
     id = id,
     title = title,
     dateMillis = dateMillis,
-    emoji = emoji
+    emoji = emoji,
+    lastModified = lastModified
 )
 
 fun Occasion.toEntity() = OccasionEntity(
     id = id ?: 0,
     title = title,
     dateMillis = dateMillis,
-    emoji = emoji
+    emoji = emoji,
+    lastModified = lastModified
 )

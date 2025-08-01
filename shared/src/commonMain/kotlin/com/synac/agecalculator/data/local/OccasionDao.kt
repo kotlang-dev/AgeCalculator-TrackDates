@@ -15,7 +15,7 @@ interface OccasionDao {
     @Query("DELETE FROM occasions WHERE id = :occasionId")
     suspend fun deleteOccasion(occasionId: Int)
 
-    @Query("SELECT * FROM occasions ORDER BY dateMillis DESC")
+    @Query("SELECT * FROM occasions ORDER BY lastModified DESC")
     fun observeOccasions(): Flow<List<OccasionEntity>>
 
     @Query("SELECT * FROM occasions WHERE id = :occasionId")
