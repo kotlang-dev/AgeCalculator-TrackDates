@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.kmp)
             implementation(libs.androidx.lifecycle.viewmodel.compose.kmp)
             implementation(libs.androidx.lifecycle.runtime.compose.kmp)
+            implementation("org.jetbrains.compose.ui:ui-backhandler:1.8.0-alpha03")
 
             //Compose
             implementation(libs.navigation.compose.kmp)

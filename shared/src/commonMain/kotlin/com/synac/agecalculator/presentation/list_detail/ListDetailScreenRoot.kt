@@ -10,13 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.calculator.CalculatorScreen
 import com.synac.agecalculator.presentation.dashboard.DashboardScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ListDetailScreenRoot(
     snackbarHostState: SnackbarHostState,
@@ -28,21 +30,34 @@ fun ListDetailScreenRoot(
     val scope = rememberCoroutineScope()
     val paneNavigator = rememberListDetailPaneScaffoldNavigator<Any>()
 
+    val isOnlyDetailPaneVisible = paneNavigator.canNavigateBack()
+
+    BackHandler(enabled = isOnlyDetailPaneVisible) {
+        scope.launch {
+            paneNavigator.navigateBack()
+        }
+    }
+
     LaunchedEffect(viewModel.event) {
         viewModel.event.collect { event ->
             when (event) {
-                is ListDetailEvent.ShowSnackbar -> {
+                is ListDetailEvent.OccasionDeleted -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = event.message,
+                            message = "Deleted Successfully",
                             duration = SnackbarDuration.Short
                         )
+                    }
+                    if (event.wasSinglePane) {
+                        scope.launch {
+                            paneNavigator.navigateBack()
+                        }
                     }
                 }
             }
         }
     }
-    val isDetailPaneVisible = paneNavigator.canNavigateBack()
+
     ListDetailPaneScaffold(
         directive = paneNavigator.scaffoldDirective,
         value = paneNavigator.scaffoldValue,
@@ -53,7 +68,13 @@ fun ListDetailScreenRoot(
                 onAction = { action ->
                     when (action) {
                         is ListDetailAction.OccasionSelected -> {
-                            viewModel.onAction(ListDetailAction.OccasionSelected(action.occasionId ?: 1))
+                            viewModel.onAction(ListDetailAction.OccasionSelected(action.occasionId))
+                            scope.launch {
+                                paneNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                            }
+                        }
+                        is ListDetailAction.AddNewOccasionClicked -> {
+                            viewModel.onAction(ListDetailAction.AddNewOccasionClicked)
                             scope.launch {
                                 paneNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                             }
@@ -67,7 +88,7 @@ fun ListDetailScreenRoot(
         detailPane = {
             CalculatorScreen(
                 state = state.calculatorState,
-                isBackIconVisible = isDetailPaneVisible,
+                isOnlyDetailPaneVisible = isOnlyDetailPaneVisible,
                 isDeleteIconVisible = state.selectedOccasion != null,
                 onAction = { action ->
                     when (action) {

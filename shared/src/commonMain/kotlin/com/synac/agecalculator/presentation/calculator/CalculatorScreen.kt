@@ -52,7 +52,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun CalculatorScreen(
     state: CalculatorUiState,
-    isBackIconVisible: Boolean,
+    isOnlyDetailPaneVisible: Boolean,
     isDeleteIconVisible: Boolean,
     onAction: (ListDetailAction) -> Unit,
 ) {
@@ -78,10 +78,10 @@ fun CalculatorScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CalculatorTopBar(
-            isBackIconVisible = isBackIconVisible,
+            isBackIconVisible = isOnlyDetailPaneVisible,
             isDeleteIconVisible = isDeleteIconVisible,
             onBackClick = { onAction(ListDetailAction.NavigateUp) },
-            onDeleteClick = { onAction(ListDetailAction.DeleteOccasion) }
+            onDeleteClick = { onAction(ListDetailAction.DeleteOccasion(isOnlyDetailPaneVisible)) }
         )
         FlowRow(
             modifier = Modifier
@@ -268,7 +268,7 @@ private fun PreviewCalculatorScreen() {
     AgeCalculatorTheme {
         CalculatorScreen(
             state = CalculatorUiState(),
-            isBackIconVisible = true,
+            isOnlyDetailPaneVisible = true,
             isDeleteIconVisible = true,
             onAction = {}
         )

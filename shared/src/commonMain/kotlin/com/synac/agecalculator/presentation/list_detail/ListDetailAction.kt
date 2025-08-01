@@ -13,7 +13,7 @@ sealed interface ListDetailAction {
     data class DateSelected(val millis: Long?) : ListDetailAction
     data class SetTitle(val title: String) : ListDetailAction
     data object SaveOccasionChanges : ListDetailAction
-    data object DeleteOccasion : ListDetailAction
+    data class DeleteOccasion(val isSinglePane: Boolean) : ListDetailAction
     data object NavigateToSettingsScreen : ListDetailAction
     data object NavigateUp : ListDetailAction
 }

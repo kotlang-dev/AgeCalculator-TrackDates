@@ -8,7 +8,6 @@ import com.synac.agecalculator.domain.repository.OccasionRepository
 import com.synac.agecalculator.domain.usecase.CalculateStatsUseCase
 import com.synac.agecalculator.presentation.calculator.CalculatorUiState
 import com.synac.agecalculator.presentation.calculator.DateField
-import com.synac.agecalculator.util.AppLogger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -24,15 +23,12 @@ class ListDetailViewModel(
     private val calculateStatsUseCase: CalculateStatsUseCase
 ) : ViewModel() {
 
-    private val TAG = "ListDetailViewModel"
-
     private val _uiState = MutableStateFlow(ListDetailUiState())
     val uiState: StateFlow<ListDetailUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             if (repository.getOccasionCount() == 0) {
-                AppLogger.d(TAG, "init: No occasions found, creating default.")
                 val default = Occasion(
                     id = null,
                     title = "Birthday",
@@ -43,7 +39,6 @@ class ListDetailViewModel(
             }
 
             repository.observeOccasions().collect { occasions ->
-                AppLogger.d(TAG, "collect: Received ${occasions.size} occasions.")
 
                 _uiState.update { currentState ->
                     val stateWithNewOccasions = currentState.copy(
@@ -51,7 +46,6 @@ class ListDetailViewModel(
                     )
 
                     if (occasions.isNotEmpty() && !stateWithNewOccasions.isInitialSelectionDone) {
-                        AppLogger.d(TAG, "collect: Performing initial selection.")
                         val firstOccasion = occasions.first()
                         val calculationResult = calculateStatsUseCase(
                             fromDateMillis = firstOccasion.dateMillis,
@@ -82,7 +76,7 @@ class ListDetailViewModel(
             is ListDetailAction.DateSelected -> handleDateSelected(action.millis)
             is ListDetailAction.ShowDatePicker -> handleShowDatePicker(action.dateField)
             ListDetailAction.ShowEmojiPicker -> handleShowEmojiPicker()
-            ListDetailAction.DeleteOccasion -> deleteOccasion()
+            is ListDetailAction.DeleteOccasion -> deleteOccasion(action.isSinglePane)
             ListDetailAction.DismissDatePicker -> handleDismissDatePicker()
             ListDetailAction.DismissEmojiPicker -> handleDismissEmojiPicker()
             is ListDetailAction.OccasionSelected -> handleOccasionSelected(action.occasionId)
@@ -167,7 +161,6 @@ class ListDetailViewModel(
     }
 
     private fun handleAddNewOccasion() {
-        AppLogger.d(TAG, "Action: handleAddNewOccasion called. Setting selectedOccasion to null.")
         _uiState.update {
             it.copy(
                 selectedOccasion = null,
@@ -219,20 +212,23 @@ class ListDetailViewModel(
             val savedId = repository.insertOccasion(occasionToSave)
             if (currentId == null) {
                 _uiState.update {
-                    it.copy(
-                        selectedOccasion = occasionToSave.copy(id = savedId)
-                    )
+                    it.copy(selectedOccasion = occasionToSave.copy(id = savedId))
                 }
             }
         }
     }
 
-    private fun deleteOccasion() {
-        val occasionToDelete = uiState.value.selectedOccasion ?: return
+    private fun deleteOccasion(isSinglePane: Boolean) {
+        val occasionToDeleteId = uiState.value.selectedOccasion?.id ?: return
         viewModelScope.launch {
-            repository.deleteOccasion(occasionToDelete.id!!)
-            _uiState.update { it.copy(selectedOccasion = null) }
-            _event.send(ListDetailEvent.ShowSnackbar("Deleted Successfully"))
+            repository.deleteOccasion(occasionToDeleteId)
+            _event.send(ListDetailEvent.OccasionDeleted(wasSinglePane = isSinglePane))
+            _uiState.update {
+                it.copy(
+                    selectedOccasion = null,
+                    calculatorState = CalculatorUiState()
+                )
+            }
         }
     }
 
