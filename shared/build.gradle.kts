@@ -54,7 +54,8 @@ kotlin {
             //Koin
             implementation(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
-            implementation(libs.bundles.koin.kmp)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
             //Kotlinx
             implementation(libs.kotlinx.datetime)
@@ -94,6 +95,10 @@ android {
 compose.desktop {
     application {
         mainClass = "com.synac.agecalculator.MainKt"
+
+        buildTypes.release.proguard {
+            obfuscate.set(true)
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

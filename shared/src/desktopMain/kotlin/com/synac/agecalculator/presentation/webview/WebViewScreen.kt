@@ -1,17 +1,11 @@
 package com.synac.agecalculator.presentation.webview
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import java.awt.Desktop
@@ -24,32 +18,23 @@ actual fun WebViewScreen(
     inDarkMode: Boolean,
     onNavigateBack: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text(text = "Privacy Policy") },
-            navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate Back"
-                    )
-                }
-            }
-        )
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Button(
-                onClick = {
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop.getDesktop().browse(URI.create(url))
-                    }
-                }
-            ) {
-                Text("Open Privacy Policy in Browser")
+    LaunchedEffect(url) {
+        val desktop = Desktop.getDesktop()
+        if (desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(URI.create(url))
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
+        onNavigateBack()
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+         Text("Redirecting to browser...")
     }
 }
