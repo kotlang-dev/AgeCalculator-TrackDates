@@ -8,7 +8,7 @@ data class CalculatorUiState(
     val title: String = "",
     val fromDateMillis: Long? = null,
     val toDateMillis: Long? = null,
-    val isEmojiDialogOpen: Boolean = false,
+    val isEmojiBottomSheetOpen: Boolean = false,
     val isDatePickerDialogOpen: Boolean = false,
     val activeDateField: DateField = DateField.FROM,
     val passedPeriod: DateTimePeriod = DateTimePeriod(),

@@ -40,7 +40,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
-import com.synac.agecalculator.presentation.component.EmojiPickerDialog
+import com.synac.agecalculator.presentation.component.EmojiPickerBottomSheet
 import com.synac.agecalculator.presentation.component.StatisticsCard
 import com.synac.agecalculator.presentation.list_detail.ListDetailAction
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
@@ -57,8 +57,8 @@ fun CalculatorScreen(
     onAction: (ListDetailAction) -> Unit,
 ) {
 
-    EmojiPickerDialog(
-        isOpen = state.isEmojiDialogOpen,
+    EmojiPickerBottomSheet(
+        isOpen = state.isEmojiBottomSheetOpen,
         onDismissRequest = { onAction(ListDetailAction.DismissEmojiPicker) },
         onEmojiSelected = { selectedEmoji ->
             onAction(ListDetailAction.EmojiSelected(selectedEmoji))

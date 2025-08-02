@@ -93,7 +93,7 @@ class ListDetailViewModel(
             it.copy(
                 calculatorState = it.calculatorState.copy(
                     emoji = emoji,
-                    isEmojiDialogOpen = false
+                    isEmojiBottomSheetOpen = false
                 )
             )
         }
@@ -103,7 +103,7 @@ class ListDetailViewModel(
     private fun handleShowEmojiPicker() {
         _uiState.update {
             it.copy(
-                calculatorState = it.calculatorState.copy(isEmojiDialogOpen = true)
+                calculatorState = it.calculatorState.copy(isEmojiBottomSheetOpen = true)
             )
         }
     }
@@ -130,7 +130,7 @@ class ListDetailViewModel(
     private fun handleDismissEmojiPicker() {
         _uiState.update {
             it.copy(
-                calculatorState = it.calculatorState.copy(isEmojiDialogOpen = false)
+                calculatorState = it.calculatorState.copy(isEmojiBottomSheetOpen = false)
             )
         }
     }
