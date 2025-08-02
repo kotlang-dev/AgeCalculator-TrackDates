@@ -3,10 +3,10 @@ package com.synac.agecalculator.presentation.settings
 import agecalculator.shared.generated.resources.Res
 import agecalculator.shared.generated.resources.ic_code_filled
 import agecalculator.shared.generated.resources.ic_dark_mode
-import agecalculator.shared.generated.resources.ic_github
+import agecalculator.shared.generated.resources.ic_info_filled
 import agecalculator.shared.generated.resources.ic_light_mode
 import agecalculator.shared.generated.resources.ic_paint_roller_filled
-import agecalculator.shared.generated.resources.ic_privacy_tip_filled
+import agecalculator.shared.generated.resources.ic_privacy
 import agecalculator.shared.generated.resources.ic_theme_auto
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -28,24 +28,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.settings.component.SettingsItemCard
 import com.synac.agecalculator.presentation.util.AppTheme
 import com.synac.agecalculator.presentation.util.Constants
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingsScreenRoot(
     navigateToPrivacyPolicy: (String) -> Unit,
+    navigateToAbout: (String) -> Unit,
     navigateUp: () -> Unit,
     onAppVersionClick: () -> Unit
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val uriHandler = LocalUriHandler.current
 
     SettingsScreen(
         state = state,
@@ -54,8 +54,8 @@ fun SettingsScreenRoot(
                 SettingAction.PrivacyPolicyClick -> {
                     navigateToPrivacyPolicy(Constants.PRIVACY_POLICY_LINK)
                 }
-                SettingAction.GithubLinkClick -> {
-                    uriHandler.openUri(Constants.GITHUB_LINK)
+                SettingAction.AboutClick -> {
+                    navigateToAbout(Constants.ABOUT_LINK)
                 }
                 SettingAction.AppVersionClick -> onAppVersionClick()
                 SettingAction.OnBackClick -> navigateUp()
@@ -99,11 +99,14 @@ private fun SettingsScreen(
                 onAction(SettingAction.ChangeAppTheme(newThemeValue))
             }
         )
-        Text(
-            text = "About",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp)
+        Spacer(modifier = Modifier.height(50.dp))
+        SettingsItemCard(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            title = "About",
+            iconResId = Res.drawable.ic_info_filled,
+            onClick = { onAction(SettingAction.AboutClick) }
         )
+        Spacer(modifier = Modifier.height(12.dp))
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "App Version",
@@ -119,15 +122,8 @@ private fun SettingsScreen(
         Spacer(modifier = Modifier.height(12.dp))
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
-            title = "Project On Github",
-            iconResId = Res.drawable.ic_github,
-            onClick = { onAction(SettingAction.GithubLinkClick) }
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        SettingsItemCard(
-            modifier = Modifier.padding(horizontal = 12.dp),
             title = "Privacy Policy",
-            iconResId = Res.drawable.ic_privacy_tip_filled,
+            iconResId = Res.drawable.ic_privacy,
             onClick = { onAction(SettingAction.PrivacyPolicyClick) }
         )
     }
@@ -177,7 +173,7 @@ private fun ThemeSettingsItem(
     }
 }
 
-//@Preview(showBackground = true)
+@Preview
 @Composable
 private fun PreviewSettingsScreen() {
     SettingsScreen(

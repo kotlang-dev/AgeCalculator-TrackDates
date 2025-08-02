@@ -1,5 +1,6 @@
 package com.synac.agecalculator.presentation.dashboard
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,15 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -29,54 +29,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.domain.model.Occasion
+import com.synac.agecalculator.presentation.calculator.DateField
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
 import com.synac.agecalculator.presentation.component.StylizedAgeText
+import com.synac.agecalculator.presentation.list_detail.ListDetailAction
+import com.synac.agecalculator.presentation.theme.gradient
+import com.synac.agecalculator.presentation.theme.greenTextColor
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.periodUntil
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.compose.viewmodel.koinViewModel
-
-@Composable
-fun DashboardScreenRoot(
-    navigateToCalculatorScreen: (Int?) -> Unit,
-    navigateToSettingsScreen: () -> Unit,
-) {
-    val viewModel: DashboardViewModel = koinViewModel()
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-    DashboardScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is DashboardAction.NavigateToCalculatorScreen -> {
-                    navigateToCalculatorScreen(action.occasionId)
-                }
-                is DashboardAction.NavigateToSettingsScreen -> navigateToSettingsScreen()
-                else -> viewModel.onAction(action)
-            }
-        }
-    )
-}
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DashboardScreen(
     state: DashboardUiState,
-    onAction: (DashboardAction) -> Unit
+    selectedOccasionId: Int?,
+    onAction: (ListDetailAction) -> Unit
 ) {
 
     CustomDatePickerDialog(
         isOpen = state.isDatePickerDialogOpen,
-        onDismissRequest = { onAction(DashboardAction.DismissDatePicker) },
+        onDismissRequest = { onAction(ListDetailAction.DismissDatePicker) },
         onConfirmButtonClick = { selectedDateMillis ->
-            onAction(DashboardAction.DateSelected(selectedDateMillis))
+            onAction(ListDetailAction.DateSelected(selectedDateMillis))
         }
     )
 
@@ -84,22 +66,23 @@ fun DashboardScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         DashboardTopBar(
-            onAddIconClick = { onAction(DashboardAction.NavigateToCalculatorScreen(null)) },
-            onSettingsIconClick = { onAction(DashboardAction.NavigateToSettingsScreen) }
+            onAddIconClick = { onAction(ListDetailAction.AddNewOccasionClicked) },
+            onSettingsIconClick = { onAction(ListDetailAction.NavigateToSettingsScreen) }
         )
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 400.dp),
+        LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(MaterialTheme.spacing.medium),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
         ) {
             items(state.occasions) { occasion ->
                 OccasionCard(
                     modifier = Modifier.fillMaxWidth(),
                     occasion = occasion,
-                    onCalendarIconClick = { onAction(DashboardAction.ShowDatePicker(occasion)) },
-                    onClick = { onAction(DashboardAction.NavigateToCalculatorScreen(occasion.id)) }
+                    isCardSelected = occasion.id == selectedOccasionId,
+                    onCalendarIconClick = {
+                        onAction(ListDetailAction.ShowDatePicker(DateField.FROM))
+                    },
+                    onClick = { onAction(ListDetailAction.OccasionSelected(occasion.id)) }
                 )
             }
         }
@@ -137,12 +120,22 @@ private fun DashboardTopBar(
 private fun OccasionCard(
     modifier: Modifier = Modifier,
     occasion: Occasion,
+    isCardSelected: Boolean,
     onCalendarIconClick: () -> Unit,
     onClick: () -> Unit
 ) {
     val dateMillis = occasion.dateMillis
-    Card(
-        modifier = modifier.clickable { onClick() }
+    val buttonContainerColor = if (isCardSelected) {
+        MaterialTheme.colorScheme.greenTextColor
+    } else MaterialTheme.colorScheme.surface
+    val buttonContentColor = if (isCardSelected) {
+        MaterialTheme.colorScheme.surface
+    } else MaterialTheme.colorScheme.onSurface
+
+    ElevatedCard(
+        modifier = modifier
+            .clickable { onClick() }
+            .border(1.dp, gradient, MaterialTheme.shapes.medium)
     ) {
         Row(
             modifier = Modifier
@@ -185,8 +178,8 @@ private fun OccasionCard(
                 .align(Alignment.End)
                 .size(25.dp),
             colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = buttonContainerColor,
+                contentColor = buttonContentColor
             )
         ) {
             Icon(
@@ -198,14 +191,15 @@ private fun OccasionCard(
     }
 }
 
-//@PreviewScreenSizes
+@Preview
 @Composable
 private fun PreviewDashboardScreen() {
     val dummyOccasions = List(20) {
-        Occasion(id = 1, title = "Birthday", dateMillis = 0L, emoji = "🎂")
+        Occasion(id = 1, title = "Birthday", dateMillis = 0L, emoji = "🎂", lastModified = 0L)
     }
     DashboardScreen(
         state = DashboardUiState(occasions = dummyOccasions),
+        selectedOccasionId = 1,
         onAction = {}
     )
 }

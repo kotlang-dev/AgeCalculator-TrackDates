@@ -6,7 +6,7 @@ import com.synac.agecalculator.domain.repository.AppUpdateRepository
 class DesktopAppUpdateRepository : AppUpdateRepository {
 
     override fun getAppVersion(): String {
-        return "2.0.0-desktop"
+        return System.getProperty("jpackage.app-version", "N/A")
     }
 
     override suspend fun getUpdateStatus(): AppUpdateStatus {

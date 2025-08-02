@@ -2,6 +2,7 @@ package com.synac.agecalculator.presentation.calculator
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -26,86 +27,49 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.synac.agecalculator.presentation.component.AgeBoxSection
 import com.synac.agecalculator.presentation.component.CustomDatePickerDialog
-import com.synac.agecalculator.presentation.component.EmojiPickerDialog
+import com.synac.agecalculator.presentation.component.EmojiPickerBottomSheet
 import com.synac.agecalculator.presentation.component.StatisticsCard
+import com.synac.agecalculator.presentation.list_detail.ListDetailAction
 import com.synac.agecalculator.presentation.theme.AgeCalculatorTheme
 import com.synac.agecalculator.presentation.theme.gradient
 import com.synac.agecalculator.presentation.theme.spacing
 import com.synac.agecalculator.presentation.util.toFormattedDateString
-import org.koin.compose.viewmodel.koinViewModel
-
-@Composable
-fun CalculatorScreenRoot(
-    snackbarHostState: SnackbarHostState,
-    navigateUp: () -> Unit
-) {
-
-    val viewModel: CalculatorViewModel = koinViewModel()
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.event.collect { event ->
-            when (event) {
-                is CalculatorEvent.ShowToast -> {
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        duration = SnackbarDuration.Short
-                    )
-                }
-                CalculatorEvent.NavigateToDashboardScreen -> navigateUp()
-            }
-        }
-    }
-
-    CalculatorScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is CalculatorAction.NavigateUp -> navigateUp()
-                else -> viewModel.onAction(action)
-            }
-        }
-    )
-}
-
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CalculatorScreen(
     state: CalculatorUiState,
-    onAction: (CalculatorAction) -> Unit,
+    isOnlyDetailPaneVisible: Boolean,
+    isDeleteIconVisible: Boolean,
+    onAction: (ListDetailAction) -> Unit,
 ) {
 
-    EmojiPickerDialog(
-        isOpen = state.isEmojiDialogOpen,
-        onDismissRequest = { onAction(CalculatorAction.DismissEmojiPicker) },
+    EmojiPickerBottomSheet(
+        isOpen = state.isEmojiBottomSheetOpen,
+        onDismissRequest = { onAction(ListDetailAction.DismissEmojiPicker) },
         onEmojiSelected = { selectedEmoji ->
-            onAction(CalculatorAction.EmojiSelected(selectedEmoji))
+            onAction(ListDetailAction.EmojiSelected(selectedEmoji))
         }
     )
 
     CustomDatePickerDialog(
         isOpen = state.isDatePickerDialogOpen,
-        onDismissRequest = { onAction(CalculatorAction.DismissDatePicker) },
+        onDismissRequest = { onAction(ListDetailAction.DismissDatePicker) },
         onConfirmButtonClick = { selectedDateMillis ->
-            onAction(CalculatorAction.DateSelected(selectedDateMillis))
+            onAction(ListDetailAction.DateSelected(selectedDateMillis))
         },
     )
 
@@ -114,14 +78,16 @@ fun CalculatorScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CalculatorTopBar(
-            isDeleteIconVisible = state.occasionId != null,
-            onBackClick = { onAction(CalculatorAction.NavigateUp) },
-            onDeleteClick = { onAction(CalculatorAction.DeleteOccasion) }
+            isBackIconVisible = isOnlyDetailPaneVisible,
+            isDeleteIconVisible = isDeleteIconVisible,
+            onBackClick = { onAction(ListDetailAction.NavigateUp) },
+            onDeleteClick = { onAction(ListDetailAction.DeleteOccasion(isOnlyDetailPaneVisible)) }
         )
         FlowRow(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             HeaderSection(
                 modifier = Modifier
@@ -144,6 +110,7 @@ fun CalculatorScreen(
 @Composable
 private fun CalculatorTopBar(
     modifier: Modifier = Modifier,
+    isBackIconVisible: Boolean,
     isDeleteIconVisible: Boolean,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -151,11 +118,13 @@ private fun CalculatorTopBar(
     TopAppBar(
         modifier = modifier,
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Navigate Back"
-                )
+            if (isBackIconVisible) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate Back"
+                    )
+                }
             }
         },
         title = { },
@@ -176,7 +145,7 @@ private fun CalculatorTopBar(
 private fun HeaderSection(
     modifier: Modifier = Modifier,
     state: CalculatorUiState,
-    onAction: (CalculatorAction) -> Unit
+    onAction: (ListDetailAction) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     Column(
@@ -191,7 +160,7 @@ private fun HeaderSection(
                     .size(65.dp)
                     .clip(CircleShape)
                     .border(1.dp, gradient, CircleShape)
-                    .clickable { onAction(CalculatorAction.ShowEmojiPicker) },
+                    .clickable { onAction(ListDetailAction.ShowEmojiPicker) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -205,7 +174,7 @@ private fun HeaderSection(
                     .fillMaxWidth()
                     .border(1.dp, gradient, MaterialTheme.shapes.medium),
                 value = state.title,
-                onValueChange = { onAction(CalculatorAction.SetTitle(it)) },
+                onValueChange = { onAction(ListDetailAction.SetTitle(it)) },
                 label = if (state.title.isEmpty()) {
                     { Text(text = "Title") }
                 } else null,
@@ -226,26 +195,15 @@ private fun HeaderSection(
         DateSection(
             title = "From",
             date = state.fromDateMillis.toFormattedDateString(),
-            onDateIconClick = { onAction(CalculatorAction.ShowDatePicker(DateField.FROM)) }
+            onDateIconClick = { onAction(ListDetailAction.ShowDatePicker(DateField.FROM)) }
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         DateSection(
             title = "To",
             date = state.toDateMillis.toFormattedDateString(),
-            onDateIconClick = { onAction(CalculatorAction.ShowDatePicker(DateField.TO)) }
+            onDateIconClick = { onAction(ListDetailAction.ShowDatePicker(DateField.TO)) }
         )
-    }
-}
-
-@Composable
-private fun StatisticsSection(
-    modifier: Modifier = Modifier,
-    state: CalculatorUiState
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
         AgeBoxSection(
             title = "Time Passed",
             values = listOf(
@@ -262,7 +220,18 @@ private fun StatisticsSection(
                 "DAYS" to state.upcomingPeriod.days
             )
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+    }
+}
+
+@Composable
+private fun StatisticsSection(
+    modifier: Modifier = Modifier,
+    state: CalculatorUiState
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         StatisticsCard(
             title = "Statistics",
             ageStats = state.ageStats
@@ -293,12 +262,14 @@ private fun DateSection(
     }
 }
 
-//@PreviewScreenSizes
+@Preview
 @Composable
 private fun PreviewCalculatorScreen() {
     AgeCalculatorTheme {
         CalculatorScreen(
             state = CalculatorUiState(),
+            isOnlyDetailPaneVisible = true,
+            isDeleteIconVisible = true,
             onAction = {}
         )
     }

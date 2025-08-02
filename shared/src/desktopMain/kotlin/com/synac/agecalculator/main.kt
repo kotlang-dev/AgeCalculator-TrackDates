@@ -9,7 +9,6 @@ fun main() {
     application {
         Window(
             onCloseRequest = ::exitApplication,
-            alwaysOnTop = true,
             title = "AgeCalculator",
         ) {
             App()

@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.synac.agecalculator.presentation.calculator.AgeStats
+import com.synac.agecalculator.domain.model.AgeStats
 import com.synac.agecalculator.presentation.theme.spacing
 import java.text.NumberFormat
 import java.util.Locale
