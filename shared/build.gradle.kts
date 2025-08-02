@@ -104,7 +104,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.synac.agecalculator"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.app.versionName.get()
         }
     }
 }

@@ -1,4 +1,5 @@
 [versions]
+app-versionName = "3.0.0"
 android-compileSdk = "35"
 android-minSdk = "21"
 android-targetSdk = "35"

@@ -6,7 +6,7 @@ import agecalculator.shared.generated.resources.ic_dark_mode
 import agecalculator.shared.generated.resources.ic_info_filled
 import agecalculator.shared.generated.resources.ic_light_mode
 import agecalculator.shared.generated.resources.ic_paint_roller_filled
-import agecalculator.shared.generated.resources.ic_privacy_tip_filled
+import agecalculator.shared.generated.resources.ic_privacy
 import agecalculator.shared.generated.resources.ic_theme_auto
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -123,7 +123,7 @@ private fun SettingsScreen(
         SettingsItemCard(
             modifier = Modifier.padding(horizontal = 12.dp),
             title = "Privacy Policy",
-            iconResId = Res.drawable.ic_privacy_tip_filled,
+            iconResId = Res.drawable.ic_privacy,
             onClick = { onAction(SettingAction.PrivacyPolicyClick) }
         )
     }
