@@ -105,8 +105,6 @@ compose.desktop {
             copyright = "© 2025 Mohammad Arif. All rights reserved."
             vendor = "Mohammad Arif"
 
-            javaHome = "C:/Users/Mohammad Arif/.gradle/jdks/eclipse_adoptium-17-amd64-windows.2"
-
             macOS {
                 iconFile.set(project.file("app_icon.icns"))
             }
