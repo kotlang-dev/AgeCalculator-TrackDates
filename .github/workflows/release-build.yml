@@ -36,9 +36,22 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew packageReleaseDistribution
 
-      # This step will list all files in the output directory so we can see what's there.
-      - name: List files in output directory
-        run: ls -R shared/build/compose/binaries
+      # This step finds the installer file and saves its full path to an output variable.
+      - name: Find Artifact Path
+        id: find_artifact
+        run: |
+          $ARTIFACT_PATH = (Get-ChildItem -Path "shared/build/compose/binaries/main-release" -Recurse -Include "*.msi", "*.dmg", "*.deb").FullName
+          echo "path=$ARTIFACT_PATH" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        shell: pwsh
+        if: matrix.os == 'windows-latest'
+
+      - name: Find Artifact Path (Unix)
+        id: find_artifact_unix
+        run: |
+          ARTIFACT_PATH=$(find shared/build/compose/binaries/main-release -type f \( -name "*.dmg" -o -name "*.deb" \))
+          echo "path=${ARTIFACT_PATH}" >> $GITHUB_OUTPUT
+        shell: bash
+        if: matrix.os != 'windows-latest'
 
       # Step 5: Upload the generated installer to the release
       - name: Upload Release Artifact
@@ -47,10 +60,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ github.event.release.upload_url }}
 
-          asset_path: |
-            ${{ matrix.os == 'windows-latest' && 'shared/build/compose/binaries/main-release/msi/*.msi' || '' }}
-            ${{ matrix.os == 'macos-latest' && 'shared/build/compose/binaries/main-release/dmg/*.dmg' || '' }}
-            ${{ matrix.os == 'ubuntu-latest' && 'shared/build/compose/binaries/main-release/deb/*.deb' || '' }}
+          # This now uses the exact path found in the previous step, avoiding the wildcard bug.
+          asset_path: ${{ steps.find_artifact.outputs.path || steps.find_artifact_unix.outputs.path }}
 
           asset_name: |
             ${{ matrix.os == 'windows-latest' && 'AgeCalculator-windows-installer.msi' || '' }}
