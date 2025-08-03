@@ -110,10 +110,17 @@ compose.desktop {
             }
             windows {
                 iconFile.set(project.file("app_icon.ico"))
+                menuGroup = "Age Calculator"
+                shortcut = true
             }
             linux {
                 iconFile.set(project.file("app_icon.png"))
             }
+        }
+
+        buildTypes.release.proguard {
+            isEnabled.set(true)
+            configurationFiles.from("compose-desktop.pro")
         }
     }
 }

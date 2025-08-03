@@ -33,29 +33,22 @@ jobs:
         run: chmod +x gradlew
 
       # Step 4: Build the app
-      # This runs the Gradle task to create the native installer package.
       - name: Build with Gradle
-        run: ./gradlew createReleaseDistributable
+        run: ./gradlew packageReleaseDistribution
 
       # Step 5: Upload the generated installer to the release
       - name: Upload Release Artifact
         uses: actions/upload-release-asset@v1
         with:
-          # This is a secret token that GitHub Actions provides automatically.
-          # It gives the workflow permission to upload files to your release.
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-          # This is the URL for the release that triggered the workflow.
           upload_url: ${{ github.event.release.upload_url }}
 
-          # Find the correct asset path based on the OS.
-          # The '**' is a wildcard that finds the file regardless of its exact name.
+          # The path now correctly points to the final installer files.
           asset_path: |
-            ${{ matrix.os == 'windows-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.msi', github.workspace) || '' }}
-            ${{ matrix.os == 'macos-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.dmg', github.workspace) || '' }}
-            ${{ matrix.os == 'ubuntu-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.deb', github.workspace) || '' }}
+            ${{ matrix.os == 'windows-latest' && format('{0}/shared/build/compose/binaries/main-release/msi/*.msi', github.workspace) || '' }}
+            ${{ matrix.os == 'macos-latest' && format('{0}/shared/build/compose/binaries/main-release/dmg/*.dmg', github.workspace) || '' }}
+            ${{ matrix.os == 'ubuntu-latest' && format('{0}/shared/build/compose/binaries/main-release/deb/*.deb', github.workspace) || '' }}
 
-          # This is the name the file will have on the release page.
           asset_name: |
             ${{ matrix.os == 'windows-latest' && 'AgeCalculator-windows-installer.msi' || '' }}
             ${{ matrix.os == 'macos-latest' && 'AgeCalculator-macOS-installer.dmg' || '' }}
