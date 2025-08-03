@@ -61,7 +61,7 @@ jobs:
       - name: Upload Release Artifact
         uses: actions/upload-release-asset@v1
         with:
-          access-token: ${{ secrets.PAT }}
+          repo-token: ${{ secrets.PAT }}
           upload_url: ${{ github.event.release.upload_url }}
 
           # This now uses the exact path found in the previous step, avoiding the wildcard bug.
