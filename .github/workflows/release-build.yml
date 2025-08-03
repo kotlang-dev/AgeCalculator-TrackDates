@@ -36,6 +36,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew packageReleaseDistribution
 
+      # This step will list all files in the output directory so we can see what's there.
+      - name: List files in output directory
+        run: ls -R shared/build/compose/binaries
+
       # Step 5: Upload the generated installer to the release
       - name: Upload Release Artifact
         uses: actions/upload-release-asset@v1
@@ -43,11 +47,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ github.event.release.upload_url }}
 
-          # The path now correctly points to the final installer files.
           asset_path: |
-              ${{ matrix.os == 'windows-latest' && 'shared/build/compose/binaries/main-release/msi/*.msi' || '' }}
-              ${{ matrix.os == 'macos-latest' && 'shared/build/compose/binaries/main-release/dmg/*.dmg' || '' }}
-              ${{ matrix.os == 'ubuntu-latest' && 'shared/build/compose/binaries/main-release/deb/*.deb' || '' }}
+            ${{ matrix.os == 'windows-latest' && 'shared/build/compose/binaries/main-release/msi/*.msi' || '' }}
+            ${{ matrix.os == 'macos-latest' && 'shared/build/compose/binaries/main-release/dmg/*.dmg' || '' }}
+            ${{ matrix.os == 'ubuntu-latest' && 'shared/build/compose/binaries/main-release/deb/*.deb' || '' }}
 
           asset_name: |
             ${{ matrix.os == 'windows-latest' && 'AgeCalculator-windows-installer.msi' || '' }}
