@@ -1,47 +1,55 @@
 # Age Calculator - Track Dates
 
-<p align="center">
-  <strong>A modern, offline-first Android app built with 100% Kotlin and Jetpack Compose, designed to track the age of important life events.</strong>
-</p>
+A modern, offline-first app designed to track the age of important life events. This project showcases modern, multi-platform development best practices - including a clean, shared architecture, a reactive and adaptive UI, and a fully automated CI/CD pipeline for desktop releases—all built with **Kotlin Multiplatform** and **Compose Multiplatform**.
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.synac.agecalculator" target="_blank">
-    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"/>
+  <a href="https://play.google.com/store/apps/details?id=com.synac.agecalculator">
+    <img alt="Get it on Google Play" src="https://img.shields.io/badge/Get%20it%20on-Google%20Play-black?style=for-the-badge&logo=google-play">
+  </a>
+  &nbsp;
+  <a href="https://github.com/kotlang-dev/AgeCalculator-TrackDates/releases/latest">
+    <img alt="Latest Release" src="https://img.shields.io/github/v/release/kotlang-dev/AgeCalculator-TrackDates?style=for-the-badge&logo=github&label=Desktop%20Downloads&color=5a3ec8">
   </a>
 </p>
 
 ---
 
-This project showcases modern Android development best practices, including a clean, multi-layered architecture, a reactive UI, and a focus on user experience. It serves as a portfolio piece demonstrating proficiency in building production-quality applications.
-
 ## ✨ Features
 
--   **📅 Track Key Life Events:** Add and manage multiple occasions like birthdays, anniversaries, and milestones.
--   **⏱️ Detailed Age Breakdown:** Instantly see the elapsed time in years, months, days, and even down to the second.
--   **🎨 Dynamic Theming:** Personalize your experience by switching between a Light theme, a Dark theme, or have the app automatically match your system settings.
--   **🔄 Seamless In-App Updates:** The app checks for new versions and allows you to update directly, ensuring you always have the latest features.
--   **🔒 100% Offline & Private:** All your data is stored securely on your device and is never collected or transmitted.
--   **🌐 Integrated WebView:** View the privacy policy seamlessly within the app, with a theme that adapts to your chosen look.
+* **💻 Multiplatform Support:** A single, shared codebase for Android, Windows, macOS, and Linux.
+* **📱 Adaptive UI:** The interface intelligently adapts to different screen sizes, providing a great experience on phones, tablets, and desktops.
+* **📅 Track Key Life Events:** Add and manage multiple occasions like birthdays, anniversaries, and milestones.
+* **⏱️ Detailed Age Breakdown:** Instantly see the elapsed time in years, months, days, and even down to the second.
+* **🎨 Dynamic Theming:** Personalize your experience by switching between Light, Dark, or System themes.
+* **🔄 Seamless In-App Updates (Android):** The app checks for new versions and allows you to update directly from the Play Store.
+* **🔒 100% Offline & Private:** All your data is stored securely on your device and is never collected or transmitted.
 
 ## 📸 Screenshots
+
+### Android
 
 | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot1.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot2.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot3.jpeg?raw=true" width="250"> |
 | :--- | :--- | :--- |
 
+### Desktop
+
+| **Windows** |
+| :---: |
+| **TODO: Add Windows Screenshot** |
+
 ## 🏗️ Architecture & Tech Stack
 
-This project follows the principles of **Clean Architecture**, separating concerns into distinct layers (Data, Domain, and Presentation) to create a scalable and maintainable codebase.
+This project follows the principles of **Clean Architecture**, separating concerns into distinct layers (Data, Domain, and Presentation) to create a scalable and maintainable codebase. The `shared` module contains all business logic and UI, which is then consumed by platform-specific application modules.
 
-| Category | Technologies & Libraries |
+| **Category** | **Technologies & Libraries** |
 | :--- | :--- |
-| **UI** | Jetpack Compose, Material 3, Compose Navigation, System UI Controller |
-| **Architecture** | MVVM with MVI-like Unidirectional Data Flow (State & Events) |
-| **Asynchronicity** | Kotlin Coroutines, Flow |
+| **Core** | Kotlin Multiplatform, Kotlin Coroutines, Flow |
+| **UI (Shared)** | Compose Multiplatform, Material 3, Compose Navigation, Adaptive Layouts |
+| **Architecture** | MVVM with a Coordinator ViewModel, MVI-like UDF, Use Cases |
 | **Dependency Injection** | Koin |
-| **Data Persistence** | Room Database, Preference DataStore |
+| **Data Persistence** | Room (Multiplatform), Preference DataStore |
 | **Date & Time** | Kotlinx DateTime |
-| **Networking** | In-App Update API (Google Play Core) |
-
+| **CI/CD** | GitHub Actions (for automated desktop releases) |
 
 ## 📄 License
 
