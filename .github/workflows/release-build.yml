@@ -4,14 +4,14 @@ name: Build Desktop Release
 # The trigger for the workflow
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 # The jobs to be run
 jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -45,9 +45,9 @@ jobs:
 
           # The path now correctly points to the final installer files.
           asset_path: |
-            ${{ matrix.os == 'windows-latest' && format('{0}/shared/build/compose/binaries/main-release/msi/*.msi', github.workspace) || '' }}
-            ${{ matrix.os == 'macos-latest' && format('{0}/shared/build/compose/binaries/main-release/dmg/*.dmg', github.workspace) || '' }}
-            ${{ matrix.os == 'ubuntu-latest' && format('{0}/shared/build/compose/binaries/main-release/deb/*.deb', github.workspace) || '' }}
+              ${{ matrix.os == 'windows-latest' && 'shared/build/compose/binaries/main-release/msi/*.msi' || '' }}
+              ${{ matrix.os == 'macos-latest' && 'shared/build/compose/binaries/main-release/dmg/*.dmg' || '' }}
+              ${{ matrix.os == 'ubuntu-latest' && 'shared/build/compose/binaries/main-release/deb/*.deb' || '' }}
 
           asset_name: |
             ${{ matrix.os == 'windows-latest' && 'AgeCalculator-windows-installer.msi' || '' }}
