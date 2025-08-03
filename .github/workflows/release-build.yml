@@ -60,8 +60,9 @@ jobs:
       # 5: Upload the generated installer to the release
       - name: Upload Release Artifact
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo-token: ${{ secrets.PAT }}
           upload_url: ${{ github.event.release.upload_url }}
 
           # This now uses the exact path found in the previous step, avoiding the wildcard bug.
