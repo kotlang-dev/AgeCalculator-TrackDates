@@ -1,0 +1,8 @@
+# This is the name of the workflow that will appear on the "Actions" tab in GitHub.
+name: Build Desktop Release
+
+# This is the trigger. It tells GitHub to run this workflow ONLY when
+# you publish a new release on the GitHub Releases page.
+on:
+  release:
+    types: [published]

@@ -18,7 +18,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -88,8 +88,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -97,14 +97,25 @@ compose.desktop {
     application {
         mainClass = "com.synac.agecalculator.MainKt"
 
-        buildTypes.release.proguard {
-            obfuscate.set(true)
-        }
-
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.synac.agecalculator"
             packageVersion = libs.versions.app.versionName.get()
+            description = "An app to track important dates and calculate ages."
+            copyright = "© 2025 Mohammad Arif. All rights reserved."
+            vendor = "Mohammad Arif"
+
+            javaHome = "C:/Users/Mohammad Arif/.gradle/jdks/eclipse_adoptium-17-amd64-windows.2"
+
+            macOS {
+                iconFile.set(project.file("app_icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("app_icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("app_icon.png"))
+            }
         }
     }
 }
