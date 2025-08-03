@@ -1,34 +1,64 @@
-# This is the name of the workflow
+# The name of the workflow
 name: Build Desktop Release
 
-# This is the trigger
+# The trigger for the workflow
 on:
   release:
     types: [published]
 
-# This is the new section that defines the work to be done
+# The jobs to be run
 jobs:
   build:
-    # This strategy block tells GitHub to run the same set of steps
-    # on three different operating systems in parallel.
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
-    # This sets the operating system for the current job run
     runs-on: ${{ matrix.os }}
 
-    # These are the individual steps the virtual machine will execute
     steps:
-      # Step 1: Check out the code from your repository
+      # Step 1: Check out the code
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up the Java JDK (version 17)
-      # This is crucial for the jpackage tool to work correctly.
+      # Step 2: Set up the Java JDK
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'adopt' # Use the Adoptium JDK, a reliable choice
+          distribution: 'adopt'
 
+      # Step 3: Grant execute permission to gradlew (for macOS and Linux)
+      - name: Grant execute permission for gradlew
+        if: matrix.os != 'windows-latest'
+        run: chmod +x gradlew
+
+      # Step 4: Build the app
+      # This runs the Gradle task to create the native installer package.
+      - name: Build with Gradle
+        run: ./gradlew createReleaseDistributable
+
+      # Step 5: Upload the generated installer to the release
+      - name: Upload Release Artifact
+        uses: actions/upload-release-asset@v1
+        with:
+          # This is a secret token that GitHub Actions provides automatically.
+          # It gives the workflow permission to upload files to your release.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+          # This is the URL for the release that triggered the workflow.
+          upload_url: ${{ github.event.release.upload_url }}
+
+          # Find the correct asset path based on the OS.
+          # The '**' is a wildcard that finds the file regardless of its exact name.
+          asset_path: |
+            ${{ matrix.os == 'windows-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.msi', github.workspace) || '' }}
+            ${{ matrix.os == 'macos-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.dmg', github.workspace) || '' }}
+            ${{ matrix.os == 'ubuntu-latest' && format('{0}/shared/build/compose/binaries/main/dist/*.deb', github.workspace) || '' }}
+
+          # This is the name the file will have on the release page.
+          asset_name: |
+            ${{ matrix.os == 'windows-latest' && 'AgeCalculator-windows-installer.msi' || '' }}
+            ${{ matrix.os == 'macos-latest' && 'AgeCalculator-macOS-installer.dmg' || '' }}
+            ${{ matrix.os == 'ubuntu-latest' && 'AgeCalculator-linux-installer.deb' || '' }}
+
+          asset_content_type: application/octet-stream
