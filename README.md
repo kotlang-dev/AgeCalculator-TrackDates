@@ -1,18 +1,26 @@
+![Banner](https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/banner.png?raw=true)
+
+<div align="center">
+  
 # Age Calculator - Track Dates
+
+</div>
 
 A modern, offline-first app designed to track the age of important life events. This project showcases modern, multi-platform development best practices - including a clean, shared architecture, a reactive and adaptive UI, and a fully automated CI/CD pipeline for desktop releases—all built with **Kotlin Multiplatform** and **Compose Multiplatform**.
 
+## Download
+
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=com.synac.agecalculator">
-    <img alt="Get it on Google Play" src="https://img.shields.io/badge/Get%20it%20on-Google%20Play-black?style=for-the-badge&logo=google-play">
+    <img alt="Get it on Google Play" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-android-download.png?raw=true" height="100">
   </a>
   &nbsp;
+  &nbsp;
+  &nbsp;
   <a href="https://github.com/kotlang-dev/AgeCalculator-TrackDates/releases/latest">
-    <img alt="Latest Release" src="https://img.shields.io/github/v/release/kotlang-dev/AgeCalculator-TrackDates?style=for-the-badge&logo=github&label=Desktop%20Downloads&color=5a3ec8">
+    <img alt="Latest Release" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-desktop-download.png?raw=true" height="100">
   </a>
 </p>
-
----
 
 ## ✨ Features
 
@@ -24,18 +32,38 @@ A modern, offline-first app designed to track the age of important life events. 
 * **🔄 Seamless In-App Updates (Android):** The app checks for new versions and allows you to update directly from the Play Store.
 * **🔒 100% Offline & Private:** All your data is stored securely on your device and is never collected or transmitted.
 
+---
+
+
 ## 📸 Screenshots
 
+<div align="center">
+  
 ### Android
 
-| <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot1.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot2.jpeg?raw=true" width="250"> | <img src="https://github.com/kotlang-dev/kotlang-dev.github.io/blob/main/assets/images/age-calc/age-calc-screenshot3.jpeg?raw=true" width="250"> |
-| :--- | :--- | :--- |
+</div>
 
+<p align="center">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-1.png?raw=true" width="25%%">
+  &nbsp;
+  &nbsp;
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-2.png?raw=true" width="25%%">
+  &nbsp;
+  &nbsp;
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-4.png?raw=true" width="25%%">
+</p>
+
+<div align="center">
+  
 ### Desktop
 
-| **Windows** |
-| :---: |
-| **TODO: Add Windows Screenshot** |
+</div>
+
+<p align="center">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-desktop.png?raw=true" width="80%">
+</p>
+
+---
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -51,13 +79,9 @@ This project follows the principles of **Clean Architecture**, separating concer
 | **Date & Time** | Kotlinx DateTime |
 | **CI/CD** | GitHub Actions (for automated desktop releases) |
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
 ---
 
-### Connect with the Author
+## Connect with the Author
 
 **Mohammad Arif**
 
@@ -67,4 +91,4 @@ This project is licensed under the MIT License.
     -   [Android Quiz App: Ktor Backend & Jetpack Compose](https://www.udemy.com/course/quiztime/?referralCode=D1F5E08155303110B7A4)
     -   [Android Fitness App: Firebase & Jetpack Compose](https://www.udemy.com/course/measuremate/?referralCode=B3DE352F96BC3C3E9E80)
 
-<a href="https://ko-fi.com/mohammadarif" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+<a href="https://ko-fi.com/mohammadarif" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px" ></a>
