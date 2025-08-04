@@ -12,13 +12,13 @@ A modern, offline-first app designed to track the age of important life events. 
 
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=com.synac.agecalculator">
-    <img alt="Get it on Google Play" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-android-download.png?raw=true" height="100">
+    <img alt="Get it on Google Play" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-android-download.png?raw=true" height="80">
   </a>
   &nbsp;
   &nbsp;
   &nbsp;
   <a href="https://github.com/kotlang-dev/AgeCalculator-TrackDates/releases/latest">
-    <img alt="Latest Release" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-desktop-download.png?raw=true" height="100">
+    <img alt="Latest Release" src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/button-desktop-download.png?raw=true" height="80">
   </a>
 </p>
 
@@ -44,13 +44,13 @@ A modern, offline-first app designed to track the age of important life events. 
 </div>
 
 <p align="center">
-  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-1.png?raw=true" width="25%%">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-1.png?raw=true" width="30%%">
   &nbsp;
   &nbsp;
-  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-2.png?raw=true" width="25%%">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-2.png?raw=true" width="30%%">
   &nbsp;
   &nbsp;
-  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-4.png?raw=true" width="25%%">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-android-4.png?raw=true" width="30%%">
 </p>
 
 <div align="center">
@@ -60,7 +60,7 @@ A modern, offline-first app designed to track the age of important life events. 
 </div>
 
 <p align="center">
-  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-desktop.png?raw=true" width="80%">
+  <img src="https://github.com/kotlang-dev/AgeCalculator-TrackDates/blob/main/.github/assets/screenshot-desktop.png?raw=true" width="85%">
 </p>
 
 ---
